@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Resumaker</string>
+    <string name="open_nav">Open Navigation Drawer</string>
+    <string name="close_nav">Close Navigation Drawer</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="resumaker">Resumaker</string>
+    <string name="log_in_to">Log in to</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="sign_up_to">Sign up to</string>
+    <string name="resumaker1">Resumaker</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="log_in">Log In</string>
+    <string name="sign_up1">Sign Up</string>
 </resources>

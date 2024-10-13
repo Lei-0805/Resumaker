@@ -5,25 +5,42 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/linearLayout14"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint13"
         android:layout_width="match_parent"
-        android:layout_height="105dp"
+        android:layout_height="100dp"
         android:background="@drawable/header_footer"
-        android:orientation="vertical"
         tools:ignore="MissingConstraints">
+
+        <ImageButton
+            android:id="@+id/ibtn_back7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="navigate"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/textView23"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.58"
+            app:srcCompat="@drawable/back" />
 
         <TextView
             android:id="@+id/textView23"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="130dp"
-            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
             android:fontFamily="@font/poppins_bold"
             android:text="Project"
             android:textColor="@color/white"
-            android:textSize="35sp" />
-    </LinearLayout>
+            android:textSize="30sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.666" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,107 +48,65 @@
         android:layout_marginTop="744dp"
         android:background="@drawable/header_footer"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout14">
+        app:layout_constraintTop_toBottomOf="@+id/constraint13">
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout25"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:background="@drawable/header2"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout14"
-        tools:layout_editor_absoluteX="20dp">
-
-        <TextView
-            android:id="@+id/textView22"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="4dp"
-            android:fontFamily="@font/poppins_bold"
-            android:text="Project 1"
-            android:textColor="@color/white"
-            android:textSize="25sp" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout26"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginTop="30dp"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout25">
+        app:layout_constraintTop_toBottomOf="@+id/constraint13">
 
         <TextView
             android:id="@+id/textView39"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Title"
             android:fontFamily="@font/poppins_medium"
+            android:text="Title"
             android:textSize="15sp" />
 
         <EditText
-            android:id="@+id/et_proj.title"
+            android:id="@+id/et_proj_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/edit_textbg"
             android:ems="10"
             android:hint="Project Tilte"
             android:inputType="text"
-            android:padding="40px" />
+            android:padding="15dp" />
 
         <TextView
             android:id="@+id/textView41"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Description"
             android:fontFamily="@font/poppins_medium"
+            android:text="Description"
             android:textSize="15sp" />
 
         <EditText
-            android:id="@+id/et_proj.description"
+            android:id="@+id/et_proj_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/edit_textbg"
             android:ems="10"
             android:hint="Project Description"
-            android:inputType="text"
-            android:padding="100dp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="30dp"
-        app:layout_constraintEnd_toEndOf="@+id/linearLayout26"
-        app:layout_constraintStart_toStartOf="@+id/linearLayout26"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout26">
+            android:gravity="top"
+            android:inputType="textMultiLine"
+            android:lines="5"
+            android:padding="15dp" />
 
         <Button
-            android:id="@+id/btn_add_projects"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:layout_marginRight="30dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/blue1"
-            android:fontFamily="@font/poppins_semibold"
-            android:text="Add"
-            app:cornerRadius="@dimen/button_radius" />
-
-        <Button
-            android:id="@+id/save_projects"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
+            android:id="@+id/btn_save_projects"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:layout_weight="1"
             android:backgroundTint="@color/green"
             android:fontFamily="@font/poppins_semibold"

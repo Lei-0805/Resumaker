@@ -5,54 +5,65 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".sign_up">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/startpage_bg"
         android:orientation="vertical"
-        android:background="@drawable/startpage_bg">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="80dp"
-            android:layout_marginTop="250dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="270dp"
             android:fontFamily="@font/poppins_semibold"
-            android:textColor="@color/white"
             android:text="Welcome to"
-            android:textSize="40sp" />
+            android:textColor="@color/white"
+            android:textSize="40sp"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="26dp"
-            android:fontFamily="@font/poppins_bold"
-            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:fontFamily="@font/poppins_black"
             android:text="Resumaker"
-            android:textSize="60sp" />
+            android:textColor="@color/white"
+            android:textSize="55sp"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
             android:fontFamily="@font/poppins_medium"
-            android:textColor="@color/white"
             android:text="The app that will help you to find a job"
-            android:textSize="20sp" />
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            tools:ignore="HardcodedText" />
 
         <Button
             android:id="@+id/btn_get_started"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="145dp"
-            android:layout_marginTop="15dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
             android:backgroundTint="@color/green"
             android:fontFamily="@font/poppins_bold"
-            android:text="Get Started" />
+            android:text="Get Started"
+            app:cornerRadius="10dp"
+            tools:ignore="HardcodedText" />
+
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

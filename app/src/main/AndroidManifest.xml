@@ -2,7 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
+        android:networkSecurityConfig="@xml/network_security_config"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -13,7 +16,7 @@
         android:theme="@style/Theme.Resumaker"
         tools:targetApi="31">
 
-        <activity android:name=".sign_in"
+        <activity android:name=".sign_up"
             android:exported="true">
         </activity>
 
@@ -21,7 +24,67 @@
             android:exported="true">
         </activity>
 
-        <activity android:name=".homepage"
+        <activity android:name=".navfunction"
+            android:exported="true">
+        </activity>
+
+        <activity android:name=".HomeFragment"
+            android:exported="true">
+        </activity>
+
+        <activity android:name=".DownloadFragment"
+            android:exported="true">
+        </activity>
+
+        <activity android:name=".SettingsFragment"
+            android:exported="true">
+        </activity>
+
+        <activity android:name=".RateFragment"
+            android:exported="true">
+        </activity>
+
+        <activity android:name=".ShareFragment"
+            android:exported="true">
+        </activity>
+
+        <activity android:name=".createpage"
+            android:exported="true">
+        </activity>
+
+        <activity android:name=".createdprofiles"
+            android:exported="true">
+        </activity>
+
+        <activity android:name=".personaldetails"
+            android:exported="true">
+        </activity>
+
+        <activity android:name=".education"
+            android:exported="true">
+        </activity>
+
+        <activity android:name=".experience"
+            android:exported="true">
+        </activity>
+
+        <activity android:name=".skills"
+            android:exported="true">
+        </activity>
+
+        <activity android:name=".objective"
+            android:exported="true">
+        </activity>
+
+        <activity android:name=".reference"
+            android:exported="true">
+        </activity>
+
+        <activity android:name=".project"
+            android:exported="true">
+        </activity>
+
+        <activity android:name=".awards"
             android:exported="true">
         </activity>
 
@@ -34,6 +97,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

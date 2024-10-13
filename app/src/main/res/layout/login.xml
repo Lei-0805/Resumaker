@@ -4,39 +4,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/linear_bg">
+    android:background="@drawable/linear_bg"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="21dp">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:id="@+id/linear_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textView11"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="145dp"
-            android:layout_marginTop="150dp"
+            android:layout_gravity="center_horizontal"
             android:fontFamily="@font/poppins_bold"
-            android:text="Log in to"
+            android:text="@string/log_in_to"
             android:textColor="@color/white"
-            android:textSize="25sp"/>
+            android:textSize="25sp" />
 
         <TextView
-            android:id="@+id/textView12"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
             android:fontFamily="@font/poppins_black"
-            android:text="Resumaker"
+            android:text="@string/resumaker1"
             android:textColor="@color/white"
-            android:textSize="55sp"/>
+            android:textSize="50sp" />
 
         <TextView
-            android:id="@+id/textView13"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
             android:layout_marginTop="20dp"
             android:fontFamily="@font/poppins_medium"
             android:text="Username"
@@ -47,23 +54,20 @@
             android:id="@+id/et_username2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="55dp"
-            android:layout_marginEnd="55dp"
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="5dp"
             android:background="@drawable/edit_textbg1"
-            android:inputType="text"
             android:hint="Enter Username"
+            android:inputType="text"
             android:textColorHint="@color/white"
-            android:padding="15dp"/>
+            android:textColor="@color/white"
+            android:padding="15dp" />
 
         <TextView
-            android:id="@+id/textView14"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
             android:layout_marginTop="20dp"
             android:fontFamily="@font/poppins_medium"
-            android:text="Password"
+            android:text=" Enter Password"
             android:textColor="@color/white"
             android:textSize="15sp" />
 
@@ -71,56 +75,57 @@
             android:id="@+id/et_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="55dp"
-            android:layout_marginEnd="55dp"
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="5dp"
             android:background="@drawable/edit_textbg1"
+            android:fontFamily="@font/poppins_medium"
             android:hint="Enter Password"
-            android:textColorHint="@color/white"
             android:inputType="textPassword"
-            android:padding="15dp"/>
+            android:textColorHint="@color/white"
+            android:textColor="@color/white"
+            android:padding="15dp" />
 
         <Button
-            android:id="@+id/btn_login1"
+            android:id="@+id/btn_LogIn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="55dp"
-            android:layout_marginEnd="55dp"
             android:layout_marginTop="25dp"
+            android:layout_gravity="center"
             android:backgroundTint="@color/green"
             android:fontFamily="@font/poppins_bold"
-            android:text="Log in"
+            android:text="@string/log_in"
+            android:textColor="@color/white"
             android:textSize="18sp"
             android:padding="15dp"
-            app:cornerRadius="@dimen/button_radius"/>
+            app:cornerRadius="@dimen/button_radius"
+            tools:ignore="HardcodedText" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="10dp"
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/textView9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="20dp"
                 android:fontFamily="@font/poppins_medium"
                 android:text="New to Resumaker?"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <Button
-                android:id="@+id/btn_signup2"
+                android:id="@+id/btn_signup1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="30dp"
-                android:layout_marginTop="20dp"
+                android:background="?attr/selectableItemBackground"
                 android:fontFamily="@font/poppins_medium"
-                android:text="Sign Up"
+                android:text="@string/sign_up1"
                 android:textColor="@color/black"
-                android:textSize="18sp"
-                android:background="?attr/selectableItemBackground"/>
+                android:textSize="14sp" />
+
         </LinearLayout>
 
     </LinearLayout>

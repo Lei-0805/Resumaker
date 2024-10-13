@@ -5,25 +5,42 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/linearLayout14"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint14"
         android:layout_width="match_parent"
-        android:layout_height="105dp"
+        android:layout_height="100dp"
         android:background="@drawable/header_footer"
-        android:orientation="vertical"
         tools:ignore="MissingConstraints">
 
         <TextView
             android:id="@+id/textView24"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
             android:fontFamily="@font/poppins_bold"
-            android:text="Achievement / Award"
+            android:text="Award"
             android:textColor="@color/white"
-            android:textSize="32sp" />
-    </LinearLayout>
+            android:textSize="30sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.666" />
+
+        <ImageButton
+            android:id="@+id/ibtn_back2"
+            android:layout_width="50dp"
+            android:layout_height="55dp"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="navigate"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/textView24"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.58"
+            app:srcCompat="@drawable/back" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,43 +48,20 @@
         android:layout_marginTop="744dp"
         android:background="@drawable/header_footer"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout14">
+        app:layout_constraintTop_toBottomOf="@+id/constraint14">
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout25"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:background="@drawable/header2"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout14"
-        tools:layout_editor_absoluteX="20dp">
-
-        <TextView
-            android:id="@+id/textView22"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="4dp"
-            android:fontFamily="@font/poppins_bold"
-            android:text="Achievement / Award 1"
-            android:textColor="@color/white"
-            android:textSize="25sp" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout26"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout25">
+        app:layout_constraintTop_toBottomOf="@+id/constraint14"
+        tools:layout_editor_absoluteX="20dp">
 
         <TextView
             android:id="@+id/textView41"
@@ -86,38 +80,37 @@
             android:ems="10"
             android:hint="Award Title"
             android:inputType="text"
-            android:padding="100dp" />
+            android:padding="15dp" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/textView42"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/poppins_medium"
+            android:text="Year Recieved"
+            android:textSize="15sp" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="30dp"
-        app:layout_constraintEnd_toEndOf="@+id/linearLayout26"
-        app:layout_constraintStart_toStartOf="@+id/linearLayout26"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout26">
-
-        <Button
-            android:id="@+id/btn_add_award"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:layout_marginRight="30dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/blue1"
-            android:fontFamily="@font/poppins_semibold"
-            android:text="Add"
-            app:cornerRadius="@dimen/button_radius" />
-
+        <EditText
+            android:id="@+id/et_year_receive"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edit_textbg"
+            android:ems="10"
+            android:hint="Year"
+            android:inputType="number"
+            android:padding="15dp" />
         <Button
             android:id="@+id/btn_save_award"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:layout_weight="1"
             android:backgroundTint="@color/green"
             android:fontFamily="@font/poppins_semibold"
             android:text="Save"
             app:cornerRadius="@dimen/button_radius" />
+
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

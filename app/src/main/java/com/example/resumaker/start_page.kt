@@ -7,7 +7,8 @@ import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 
-class startpage : AppCompatActivity() {
+
+class start_page : AppCompatActivity() {
 
     lateinit var btn_get_started : Button
 
@@ -19,13 +20,15 @@ class startpage : AppCompatActivity() {
 
         btn_get_started = findViewById(R.id.btn_get_started)
 
-        btn_get_started.setOnClickListener(this, MainActivity::class.java)
+        btn_get_started.setOnClickListener {
+            navigateTo(sign_up::class.java)
+        }
     }
-}
 
-private fun Button.setOnClickListener(activity: AppCompatActivity, nextPage: Class<*>) {
-    this.setOnClickListener {
-        val intent = Intent(activity, nextPage)
-        activity.startActivity(intent)
+    private fun navigateTo(nextPage: Class<*>) {
+        val intent = Intent(this, nextPage)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
     }
 }
