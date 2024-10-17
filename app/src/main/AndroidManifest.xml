@@ -28,11 +28,8 @@
             android:exported="true">
         </activity>
 
-        <activity android:name=".HomeFragment"
-            android:exported="true">
-        </activity>
 
-        <activity android:name=".DownloadFragment"
+        <activity android:name=".HomeFragment"
             android:exported="true">
         </activity>
 
@@ -40,11 +37,11 @@
             android:exported="true">
         </activity>
 
-        <activity android:name=".RateFragment"
+        <activity android:name=".DownloadFragment"
             android:exported="true">
         </activity>
 
-        <activity android:name=".ShareFragment"
+        <activity android:name=".RateFragment"
             android:exported="true">
         </activity>
 

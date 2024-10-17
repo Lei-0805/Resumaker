@@ -1,5 +1,6 @@
 package com.example.resumaker
 
+import SettingsFragment
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.MenuItem
@@ -38,8 +39,6 @@ class navfunction : AppCompatActivity(), NavigationView.OnNavigationItemSelected
                 .replace(R.id.fragment_container, HomeFragment()).commit()
             R.id.nav_settings -> supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, SettingsFragment()).commit()
-            R.id.nav_share -> supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, ShareFragment()).commit()
             R.id.nav_rate -> supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, RateFragment()).commit()
             R.id.nav_download -> supportFragmentManager.beginTransaction()

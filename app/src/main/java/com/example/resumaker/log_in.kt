@@ -4,116 +4,106 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.google.android.material.textfield.TextInputEditText
 import org.json.JSONObject
 
-class log_in : ComponentActivity() {
+class log_in : AppCompatActivity() {
 
-    private lateinit var et_username2: EditText
-    private lateinit var et_password: EditText
-    private lateinit var btn_LogIn: Button
-    private lateinit var btn_signup1: Button
+    lateinit var til_username: TextInputEditText
+    lateinit var til_password: TextInputEditText
+    lateinit var btn_LogIn: Button
+    lateinit var btn_signup1: Button
+    private val sharedPrefFile = "UserPrefs"
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login)
 
-        et_username2 = findViewById(R.id.et_username2)
-        et_password = findViewById(R.id.et_password)
+        til_username = findViewById(R.id.til_username)
+        til_password = findViewById(R.id.til_password)
         btn_LogIn = findViewById(R.id.btn_LogIn)
         btn_signup1 = findViewById(R.id.btn_signup1)
 
-        // Handle login button click
         btn_LogIn.setOnClickListener {
-            if (areFieldsValid()) {
-                val username = et_username2.text.toString()
-                val password = et_password.text.toString()
+            val username = til_username.text.toString()
+            val password = til_password.text.toString()
 
-                // Call the login function with the entered credentials
-                login(username, password)
-            }
+            login(username, password)
         }
-
-        // Handle sign-up button click
         btn_signup1.setOnClickListener {
-            val intent = Intent(this, sign_up::class.java)
-            startActivity(intent)
-            finish()
+            navigateTo(sign_up::class.java)
         }
     }
 
-    private fun areFieldsValid(): Boolean {
-        return when {
-            et_username2.text.isNullOrEmpty() -> {
-                et_username2.error = "Username is required"
-                false
-            }
-            et_password.text.isNullOrEmpty() -> {
-                et_password.error = "Password is required"
-                false
-            }
-            else -> true
-        }
-    }
-
-    // Function to handle login
-    private fun login(username: String, password: String) {
-        val url = "http://192.168.1.9:8000/api/login"
+    private fun login(username: String, create_password: String) {
         val queue = Volley.newRequestQueue(this)
+        val url = "http://192.168.1.9:8000/api/login_users"
 
         val request = object : StringRequest(
             Request.Method.POST, url,
             { response ->
                 try {
-                    println("Response: $response") // Log full response
+                    // Log the raw response for debugging
+                    println("Raw response: $response")
 
+                    // Try parsing the JSON response
                     val jsonResponse = JSONObject(response)
+                    val message = jsonResponse.getString("message")
 
-                    // Check if the response contains an access token
-                    if (jsonResponse.has("access_token")) {
-                        val token = jsonResponse.getString("access_token")
-                        val user = jsonResponse.getJSONObject("user")
-                        val username = user.getString("username")
+                    if (message == "Login successful") {
+                        // Save login state in SharedPreferences
+                        val sharedPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE)
+                        with(sharedPreferences.edit()) {
+                            putBoolean("isLoggedIn", true)
+                            apply()
+                        }
 
-                        // Save login info in shared preferences
-                        val sharedPreferences = getSharedPreferences("user_session", MODE_PRIVATE)
-                        val editor = sharedPreferences.edit()
-                        editor.putString("username", username)
-                        editor.putString("access_token", token)
-                        editor.apply()
+                        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 
-                        Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
-
-                        // Navigate to the next activity
-                        val intent = Intent(this, navfunction::class.java)
-                        startActivity(intent)
-                        finish()
+                        navigateTo(navfunction::class.java)
                     } else {
-                        // Handle error message if access_token is not present
-                        Toast.makeText(this, "Login failed: ${jsonResponse.optString("error", "Unknown error")}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Login failed: $message", Toast.LENGTH_SHORT).show()
                     }
                 } catch (e: Exception) {
-                    Toast.makeText(this, "Error parsing response: ${e.message}", Toast.LENGTH_SHORT).show()
+                    // Log and show the response in case of parsing failure
+                    Toast.makeText(this, "Error parsing response: $response", Toast.LENGTH_LONG).show()
+                    println("Error parsing response: ${e.message}")
                 }
             },
             { error ->
-                Toast.makeText(this, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
+                if (error.networkResponse != null) {
+                    val statusCode = error.networkResponse.statusCode
+                    val errorData = error.networkResponse.data?.let { String(it) }
+
+                    // Log full error details for debugging
+                    Toast.makeText(this, "Error: $statusCode - $errorData", Toast.LENGTH_LONG).show()
+                    println("Error: $statusCode - $errorData")
+                } else {
+                    Toast.makeText(this, "Network error: ${error.message}", Toast.LENGTH_LONG).show()
+                    println("Network error: ${error.message}")
+                }
             }) {
             override fun getParams(): MutableMap<String, String> {
                 val params = HashMap<String, String>()
                 params["username"] = username
-                params["create_password"] = password // Make sure to match the field name
+                params["create_password"] = create_password
                 return params
             }
         }
 
-        // Add the request to the request queue
         queue.add(request)
+    }
+
+    private fun navigateTo(nextPage: Class<*>) {
+        val intent = Intent(this, nextPage)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
     }
 }

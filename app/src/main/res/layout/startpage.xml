@@ -60,6 +60,7 @@
             android:layout_marginTop="16dp"
             android:backgroundTint="@color/green"
             android:fontFamily="@font/poppins_bold"
+            android:textColor="@color/white"
             android:text="Get Started"
             app:cornerRadius="10dp"
             tools:ignore="HardcodedText" />

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 
@@ -34,8 +35,7 @@ class project : AppCompatActivity() {
                 val company = et_proj_title.text.toString()
                 val job = et_proj_description.text.toString()
 
-                val intent = Intent(this, navfunction::class.java)
-                startActivity(intent)
+                Toast.makeText(this, "Saved successfully", Toast.LENGTH_SHORT).show()
             }
         }
 

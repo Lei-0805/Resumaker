@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 
@@ -32,6 +33,8 @@ class awards : AppCompatActivity() {
             if (areFieldsValid()) {
                 val achievement = et_achievement.text.toString()
                 val year_receive = et_year_receive.text.toString()
+
+                Toast.makeText(this, "Saved successfully", Toast.LENGTH_SHORT).show()
             }
         }
         ibtn_back2.setOnClickListener {

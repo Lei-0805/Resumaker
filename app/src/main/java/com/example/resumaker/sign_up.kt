@@ -3,163 +3,108 @@ package com.example.resumaker
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.android.volley.Request
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import com.google.android.material.textfield.TextInputEditText
 import org.json.JSONObject
-import java.io.OutputStream
-import java.net.HttpURLConnection
-import java.net.URL
 
 class sign_up : AppCompatActivity() {
 
-    lateinit var et_username1: EditText
-    lateinit var et_create_password: EditText
-    lateinit var et_confirm_password: EditText
+    lateinit var til_create_username: TextInputEditText
+    lateinit var til_create_password: TextInputEditText
+    lateinit var til_confirm_password: TextInputEditText
     lateinit var btnSignUp: Button
     lateinit var btnLogIn1: Button
+    private val sharedPrefFile = "UserPrefs"
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.signup)
 
-        et_username1 = findViewById(R.id.et_username1)
-        et_create_password = findViewById(R.id.et_create_password)
-        et_confirm_password = findViewById(R.id.et_confirm_password)
+        til_create_username = findViewById(R.id.til_create_username)
+        til_create_password = findViewById(R.id.til_create_password)
+        til_confirm_password = findViewById(R.id.til_confirm_password)
         btnSignUp = findViewById(R.id.btnSignUp)
         btnLogIn1 = findViewById(R.id.btnLogIn1)
 
         btnSignUp.setOnClickListener {
-            if (areFieldsValid()) {
-                val username = et_username1.text.toString()
-                val createPassword = et_create_password.text.toString()
-                val confirmPassword = et_confirm_password.text.toString()
+            val username = til_create_username.text.toString()
+            val createPassword = til_create_password.text.toString()
+            val confirmPassword = til_confirm_password.text.toString()
 
-                signupWithHttpUrlConnection(username, createPassword, confirmPassword)
+            if (createPassword == confirmPassword) {
+                signup(username, createPassword, confirmPassword)
+            } else {
+                Toast.makeText(this, "Passwords do not match!", Toast.LENGTH_SHORT).show()
             }
         }
 
         btnLogIn1.setOnClickListener {
-            val intent = Intent(this, log_in::class.java)
-            startActivity(intent)
-            finish()
+            navigateTo(log_in::class.java)
         }
     }
 
-    private fun areFieldsValid(): Boolean {
-        return when {
-            et_username1.text.isNullOrEmpty() -> {
-                et_username1.error = "Username is required"
-                false
-            }
+    private fun signup(username: String, create_password: String, confirm_password: String) {
+        val queue = Volley.newRequestQueue(this)
+        val url = "http://192.168.1.9:8000/api/signup_users"
 
-            et_username1.text.length < 7 -> {
-                et_username1.error = "Username must be at least 7 characters"
-                false
-            }
+        val request = object : StringRequest(
+            Request.Method.POST, url,
+            { response ->
+                try {
+                    // Try parsing JSON response
+                    val jsonResponse = JSONObject(response)
+                    val message = jsonResponse.getString("message")
 
-            et_username1.text.length > 10 -> {
-                et_username1.error = "Username cannot be more than 10 characters"
-                false
-            }
+                    if (message == "Sign up successful") {
+                        // Save login state in SharedPreferences after successful signup
+                        val sharedPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE)
+                        with(sharedPreferences.edit()) {
+                            putBoolean("isLoggedIn", true)
+                            apply()
+                        }
 
-            et_create_password.text.isNullOrEmpty() -> {
-                et_create_password.error = "Password is required"
-                false
-            }
-
-            et_create_password.text.length < 6 -> {
-                et_create_password.error = "Password must be at least 6 characters"
-                false
-            }
-
-            et_create_password.text.length > 8 -> {
-                et_create_password.error = "Password cannot be more than 8 characters"
-                false
-            }
-
-            et_confirm_password.text.isNullOrEmpty() -> {
-                et_confirm_password.error = "Confirm password is required"
-                false
-            }
-
-            et_create_password.text.toString() != et_confirm_password.text.toString() -> {
-                et_confirm_password.error = "Passwords do not match"
-                false
-            }
-
-            else -> true
-        }
-    }
-
-    private fun signupWithHttpUrlConnection(
-        username: String,
-        createPassword: String,
-        confirmPassword: String
-    ) {
-        // Run the network request on a background thread
-        Thread {
-            try {
-                val url = URL("http://192.168.1.9:8000/api/signup_users")
-                val urlConnection = url.openConnection() as HttpURLConnection
-                urlConnection.requestMethod = "POST"
-                urlConnection.doOutput = true
-                urlConnection.setRequestProperty("Content-Type", "application/json")  // Set to JSON
-
-                // Create JSON object with the parameters
-                val jsonRequest = JSONObject()
-                jsonRequest.put("username", username)
-                jsonRequest.put("create_password", createPassword)
-                jsonRequest.put("confirm_password", confirmPassword)
-
-                // Log the JSON request for debugging
-                Log.d("JSON Payload", jsonRequest.toString())
-
-                // Write the JSON data to the output stream
-                val outputStream: OutputStream = urlConnection.outputStream
-                outputStream.write(jsonRequest.toString().toByteArray())
-                outputStream.flush()
-                outputStream.close()
-
-                // Check the response code and handle accordingly
-                val responseCode = urlConnection.responseCode
-                val responseMessage = urlConnection.responseMessage
-
-                Log.d("HTTP Response", "Code: $responseCode, Message: $responseMessage")
-
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    // Success: Process the response and navigate to the next activity
-                    runOnUiThread {
-                        Toast.makeText(this, "Signup successful!", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this, navfunction::class.java)
-                        startActivity(intent)
-                        finish()
+                        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                        navigateTo(navfunction::class.java)
+                    } else {
+                        Toast.makeText(this, "Signup failed: $message", Toast.LENGTH_SHORT).show()
                     }
+                } catch (e: Exception) {
+                    // Log the response for debugging
+                    Toast.makeText(this, "Error parsing response: ${response}", Toast.LENGTH_LONG).show()
+                }
+            },
+            { error ->
+                if (error.networkResponse != null) {
+                    val statusCode = error.networkResponse.statusCode
+                    val errorData = error.networkResponse.data?.let { String(it) }
+
+                    // Log full error response for debugging
+                    Toast.makeText(this, "Error: $statusCode - $errorData", Toast.LENGTH_LONG).show()
                 } else {
-                    // Failure: Read the error response
-                    val errorStream = urlConnection.errorStream?.bufferedReader()?.readText()
-                    runOnUiThread {
-                        Toast.makeText(
-                            this,
-                            "Error: $responseCode - $errorStream",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        Log.e("HTTP Error", "Error: $responseCode, Message: $errorStream")
-                    }
+                    Toast.makeText(this, "Network error: ${error.message}", Toast.LENGTH_LONG).show()
                 }
-
-                // Disconnect after processing
-                urlConnection.disconnect()
-            } catch (e: Exception) {
-                e.printStackTrace()
-                runOnUiThread {
-                    Toast.makeText(this, "Exception: ${e.message}", Toast.LENGTH_SHORT).show()
-                    Log.e("Exception", e.message.toString())
-                }
+            }) {
+            override fun getParams(): MutableMap<String, String> {
+                val params = HashMap<String, String>()
+                params["username"] = username
+                params["create_password"] = create_password
+                params["confirm_password"] = confirm_password
+                return params
             }
-        }.start() // Start the background thread
+        }
+
+        queue.add(request)
+    }
+    private fun navigateTo(nextPage: Class<*>) {
+        val intent = Intent(this, nextPage)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
     }
 }

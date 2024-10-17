@@ -41,6 +41,12 @@
             android:fontFamily="@font/poppins_semibold"
             android:background="?attr/selectableItemBackground"/>
 
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/line_4" />
+
         <Button
             android:id="@+id/btn_export"
             android:layout_width="match_parent"
@@ -52,16 +58,28 @@
             android:fontFamily="@font/poppins_semibold"
             android:background="?attr/selectableItemBackground"/>
 
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/line_4" />
+
         <Button
             android:id="@+id/btn_log_out"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:fontFamily="@font/poppins_semibold"
             android:gravity="start"
             android:text="Log Out"
             android:textColor="@color/black"
-            android:textSize="15sp"
-            android:fontFamily="@font/poppins_semibold"
-            android:background="?attr/selectableItemBackground"/>
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/line_4" />
 
     </LinearLayout>
 
