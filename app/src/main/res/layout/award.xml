@@ -43,16 +43,6 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="65dp"
-        android:layout_marginTop="744dp"
-        android:background="@drawable/header_footer"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/constraint14">
-
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/linearLayout26"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -88,18 +78,20 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:fontFamily="@font/poppins_medium"
-            android:text="Year Recieved"
+            android:text="Award Description"
             android:textSize="15sp" />
 
         <EditText
-            android:id="@+id/et_year_receive"
+            android:id="@+id/et_award_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/edit_textbg"
+            android:gravity="top"
             android:ems="10"
-            android:hint="Year"
-            android:inputType="number"
-            android:padding="15dp" />
+            android:hint="Description Details"
+            android:inputType="textMultiLine"
+            android:padding="15dp"
+            android:lines="5"/>
         <Button
             android:id="@+id/btn_save_award"
             android:layout_width="match_parent"
@@ -112,5 +104,12 @@
             app:cornerRadius="@dimen/button_radius" />
 
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_awards"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout26" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

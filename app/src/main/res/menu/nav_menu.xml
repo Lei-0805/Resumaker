@@ -20,10 +20,6 @@
             android:id="@+id/nav_rate"
             android:icon="@drawable/baseline_star_rate_24"
             android:title="Rate"/>
-        <item
-            android:id="@+id/nav_download"
-            android:icon="@drawable/baseline_download_24"
-            android:title="Download"/>
 
     </group>
 </menu>

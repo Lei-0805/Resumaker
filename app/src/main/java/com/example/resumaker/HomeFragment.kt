@@ -13,9 +13,6 @@ class HomeFragment : Fragment() {
 
     lateinit var ibtn_createhp: ImageButton
     lateinit var ibtn_created_profilehp: ImageButton
-    lateinit var ibtn_mergehp: ImageButton
-    lateinit var ibtn_splithp: ImageButton
-    lateinit var ibtn_compresshp: ImageButton
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,9 +23,6 @@ class HomeFragment : Fragment() {
 
         ibtn_createhp = view.findViewById(R.id.ibtn_createhp)
         ibtn_created_profilehp = view.findViewById(R.id.ibtn_created_profilehp)
-        ibtn_mergehp = view.findViewById(R.id.ibtn_mergehp)
-        ibtn_splithp = view.findViewById(R.id.ibtn_splithp)
-        ibtn_compresshp = view.findViewById(R.id.ibtn_compresshp)
 
         ibtn_createhp.setOnClickListener {
             val intent = Intent(requireContext(), createpage::class.java)

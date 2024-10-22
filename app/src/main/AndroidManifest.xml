@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -17,80 +18,43 @@
         tools:targetApi="31">
 
         <activity android:name=".sign_up"
-            android:exported="true">
-        </activity>
-
+            android:exported="true" />
         <activity android:name=".log_in"
-            android:exported="true">
-        </activity>
-
+            android:exported="true" />
         <activity android:name=".navfunction"
-            android:exported="true">
-        </activity>
-
-
+            android:exported="true" />
         <activity android:name=".HomeFragment"
-            android:exported="true">
-        </activity>
-
-        <activity android:name=".SettingsFragment"
-            android:exported="true">
-        </activity>
-
-        <activity android:name=".DownloadFragment"
-            android:exported="true">
-        </activity>
-
+            android:exported="true" />
+        <activity android:name=".ViewCVActivity"
+            android:exported="true" />
         <activity android:name=".RateFragment"
-            android:exported="true">
-        </activity>
-
+            android:exported="true" />
+        <activity android:name=".SettingsFragment"
+            android:exported="true" />
         <activity android:name=".createpage"
-            android:exported="true">
-        </activity>
-
+            android:exported="true" />
         <activity android:name=".createdprofiles"
-            android:exported="true">
-        </activity>
-
-        <activity android:name=".personaldetails"
-            android:exported="true">
-        </activity>
-
-        <activity android:name=".education"
-            android:exported="true">
-        </activity>
-
-        <activity android:name=".experience"
-            android:exported="true">
-        </activity>
-
-        <activity android:name=".skills"
-            android:exported="true">
-        </activity>
-
-        <activity android:name=".objective"
-            android:exported="true">
-        </activity>
-
-        <activity android:name=".reference"
-            android:exported="true">
-        </activity>
-
-        <activity android:name=".project"
-            android:exported="true">
-        </activity>
-
-        <activity android:name=".awards"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
+        <activity android:name=".PersonalDetailsActivity"
+            android:exported="true" />
+        <activity android:name=".EducationActivity"
+            android:exported="true" />
+        <activity android:name=".ExperienceActivity"
+            android:exported="true" />
+        <activity android:name=".SkillActivity"
+            android:exported="true" />
+        <activity android:name=".ObjectiveActivity"
+            android:exported="true" />
+        <activity android:name=".ProjectActivity"
+            android:exported="true" />
+        <activity android:name=".AwardActivity"
+            android:exported="true" />
 
         <activity
             android:name=".start_page"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

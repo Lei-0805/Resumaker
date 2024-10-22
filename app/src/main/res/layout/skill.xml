@@ -44,17 +44,6 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="65dp"
-        android:layout_marginTop="744dp"
-        android:background="@drawable/header_footer"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/constraint16"
-        tools:layout_editor_absoluteX="34dp">
-
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/linearLayout26"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -79,71 +68,45 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/edit_textbg"
+            android:gravity="top"
+            android:lines="2"
             android:ems="10"
             android:hint="Your Skill/s"
-            android:inputType="text"
+            android:inputType="textMultiLine"
             android:padding="15dp" />
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/textView42"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:fontFamily="@font/poppins_bold"
-        android:text="Expertise Level"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="@+id/linearLayout26"
-        app:layout_constraintStart_toStartOf="@+id/linearLayout26"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout26" />
 
     <LinearLayout
         android:id="@+id/linearLayout21"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/textView42"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout26"
         tools:layout_editor_absoluteX="20dp">
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/poppins_medium"
-            android:layout_weight="1"
-            android:textSize="15sp"
-            android:text="Rate your expertise" />
-
-        <EditText
-            android:id="@+id/et_rate_skill"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_weight="1"
-            android:autofillHints="null"
-            android:background="@drawable/edit_textbg"
-            android:ems="10"
-            android:inputType="number"
-            android:padding="15dp"
-            android:hint="1-10"
-            android:textColor="@color/grey"/>
 
         <Button
             android:id="@+id/btn_save_skill"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
             android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
             android:layout_weight="1"
             android:backgroundTint="@color/green"
             android:fontFamily="@font/poppins_semibold"
             android:text="Save"
             app:cornerRadius="@dimen/button_radius" />
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_skill"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout21"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="-16dp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

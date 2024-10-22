@@ -12,4 +12,5 @@
     <string name="already_have_an_account">Already have an account?</string>
     <string name="log_in">Log In</string>
     <string name="sign_up1">Sign Up</string>
+    <string name="profile_image">profile_image</string>
 </resources>

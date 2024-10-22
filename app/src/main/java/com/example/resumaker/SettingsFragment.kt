@@ -1,3 +1,6 @@
+package com.example.resumaker
+
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
@@ -11,15 +14,15 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.example.resumaker.R
 
 class SettingsFragment : Fragment() {
 
     private lateinit var btn_import: Button
-    private lateinit var btn_export: Button
+    private lateinit var btn_history: Button
     private lateinit var btn_log_out: Button
     private val FILE_SELECT_CODE = 0
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -28,15 +31,16 @@ class SettingsFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_settings, container, false)
 
         btn_import = view.findViewById(R.id.btn_import)
-        btn_export = view.findViewById(R.id.btn_export)
+        btn_history = view.findViewById(R.id.btn_history)
         btn_log_out = view.findViewById(R.id.btn_log_out)
 
         btn_import.setOnClickListener {
             openFileManager()
         }
 
-        btn_export.setOnClickListener {
-            // Handle the export button click
+        btn_history.setOnClickListener {
+            val intent = Intent(requireContext(), ResumeHistory::class.java)
+            startActivity(intent)
         }
 
         btn_log_out.setOnClickListener {
@@ -98,9 +102,10 @@ class SettingsFragment : Fragment() {
     }
 
     private fun logoutUser() {
-        val sharedPreferences: SharedPreferences = requireContext().getSharedPreferences("userSession", Context.MODE_PRIVATE)
+        val sharedPreferences: SharedPreferences = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
-        editor.clear()
+        editor.putBoolean("is_logged_in", false) // Ensure logged in state is false
+        editor.putBoolean("is_signed_in", false) // Ensure signed in state is false
         editor.apply()
 
         Toast.makeText(requireContext(), "Logged out successfully", Toast.LENGTH_SHORT).show()

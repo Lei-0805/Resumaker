@@ -1,6 +1,5 @@
 package com.example.resumaker
 
-import SettingsFragment
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.MenuItem
@@ -41,8 +40,6 @@ class navfunction : AppCompatActivity(), NavigationView.OnNavigationItemSelected
                 .replace(R.id.fragment_container, SettingsFragment()).commit()
             R.id.nav_rate -> supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, RateFragment()).commit()
-            R.id.nav_download -> supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, DownloadFragment()).commit()
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         return true

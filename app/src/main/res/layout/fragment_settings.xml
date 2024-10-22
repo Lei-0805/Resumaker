@@ -48,11 +48,11 @@
             android:src="@drawable/line_4" />
 
         <Button
-            android:id="@+id/btn_export"
+            android:id="@+id/btn_history"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="start"
-            android:text="Export Profiles"
+            android:text="Resume History"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:fontFamily="@font/poppins_semibold"

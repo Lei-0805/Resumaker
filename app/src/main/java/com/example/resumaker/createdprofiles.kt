@@ -4,15 +4,13 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import android.widget.ImageButton
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 
 class createdprofiles : AppCompatActivity() {
 
-    private lateinit var btn_create_now: Button
-    private lateinit var HomeFragment: Fragment
+    private lateinit var btn_edit : Button
+    private lateinit var btn_delete : Button
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,9 +18,10 @@ class createdprofiles : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.createdprofiles)
 
-        btn_create_now = findViewById(R.id.btn_create_now)
+        btn_edit = findViewById(R.id.btn_edit)
+        btn_delete = findViewById(R.id.btn_delete)
 
-        btn_create_now.setOnClickListener {
+        btn_edit.setOnClickListener {
             val intent = Intent(this, createpage::class.java)
             startActivity(intent)
             finish()

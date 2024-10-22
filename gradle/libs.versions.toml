@@ -7,13 +7,16 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
 material = "1.12.0"
-activity = "1.9.2"
+activity = "1.9.3"
 constraintlayout = "2.1.4"
-runtimeAndroid = "1.7.2"
-foundationAndroid = "1.7.2"
-navigationRuntimeKtx = "2.8.1"
+runtimeAndroid = "1.7.4"
+foundationAndroid = "1.7.4"
+navigationRuntimeKtx = "2.8.3"
 volley = "1.2.1"
 toolsCore = "1.0.0-alpha10"
+gson = "2.11.0"
+annotations = "5.0.0-rc01"
+firebaseStorageKtx = "21.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -29,6 +32,9 @@ androidx-foundation-android = { group = "androidx.compose.foundation", name = "f
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
 volley = { group = "com.android.volley", name = "volley", version.ref = "volley" }
 androidx-tools-core = { group = "androidx.privacysandbox.tools", name = "tools-core", version.ref = "toolsCore" }
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+annotations = { group = "com.github.bumptech.glide", name = "annotations", version.ref = "annotations" }
+firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage-ktx", version.ref = "firebaseStorageKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

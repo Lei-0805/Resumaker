@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragment_container"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -29,7 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="200dp"
+        android:layout_marginBottom="150dp"
         android:fontFamily="@font/poppins_semibold"
         android:text="Resume Creating Tools"
         android:textColor="@color/black"
@@ -40,7 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginBottom="120dp"
+        android:layout_marginBottom="50dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:orientation="horizontal">
@@ -66,60 +65,6 @@
             android:contentDescription="button"
             android:drawablePadding="10dp"
             android:scaleType="fitCenter" />
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="10dp"
-        android:fontFamily="@font/poppins_semibold"
-        android:text="PDF Tools"
-        android:textColor="@color/black"
-        android:textSize="20sp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="400dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp">
-
-        <ImageButton
-            android:id="@+id/ibtn_mergehp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="0dp"
-            android:background="@drawable/merge_pdf"
-            android:contentDescription="button"
-            android:drawablePadding="10dp"
-            android:scaleType="fitCenter" />
-
-        <ImageButton
-            android:id="@+id/ibtn_splithp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/split_pdf"
-            android:contentDescription="button"
-            android:drawablePadding="10dp"
-            android:scaleType="fitCenter" />
-
-        <ImageButton
-            android:id="@+id/ibtn_compresshp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/compress_pdf"
-            android:contentDescription="button"
-            android:drawablePadding="10dp"
-            android:scaleType="fitCenter" />
-
     </LinearLayout>
 
     <LinearLayout
