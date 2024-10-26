@@ -15,10 +15,10 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 
+@Suppress("DEPRECATION")
 class SettingsFragment : Fragment() {
 
     private lateinit var btn_import: Button
-    private lateinit var btn_history: Button
     private lateinit var btn_log_out: Button
     private val FILE_SELECT_CODE = 0
 
@@ -31,16 +31,10 @@ class SettingsFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_settings, container, false)
 
         btn_import = view.findViewById(R.id.btn_import)
-        btn_history = view.findViewById(R.id.btn_history)
         btn_log_out = view.findViewById(R.id.btn_log_out)
 
         btn_import.setOnClickListener {
             openFileManager()
-        }
-
-        btn_history.setOnClickListener {
-            val intent = Intent(requireContext(), ResumeHistory::class.java)
-            startActivity(intent)
         }
 
         btn_log_out.setOnClickListener {

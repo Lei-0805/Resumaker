@@ -1,6 +1,5 @@
 package com.example.resumaker
 
-import Skill
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

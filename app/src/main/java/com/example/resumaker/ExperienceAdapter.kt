@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class ExperienceAdapter(private val experienceList: MutableList<Map<String, String>>) : RecyclerView.Adapter<ExperienceAdapter.ExperienceViewHolder>() {
+class ExperienceAdapter(private val experienceList: MutableList<Experience>) : RecyclerView.Adapter<ExperienceAdapter.ExperienceViewHolder>() {
 
     inner class ExperienceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvCompany: TextView = itemView.findViewById(R.id.tv_company_name)
@@ -23,11 +23,11 @@ class ExperienceAdapter(private val experienceList: MutableList<Map<String, Stri
 
     override fun onBindViewHolder(holder: ExperienceViewHolder, position: Int) {
         val experience = experienceList[position]
-        holder.tvCompany.text = experience["company"] ?: "N/A"
-        holder.tvJobTitle.text = experience["jobTitle"] ?: "N/A"
-        holder.tvStartDate.text = experience["startDate"] ?: "N/A"
-        holder.tvEndDate.text = experience["endDate"] ?: "N/A"
-        holder.tvDetails.text = experience["details"] ?: "N/A"
+        holder.tvCompany.text = experience.company
+        holder.tvJobTitle.text = experience.jobTitle
+        holder.tvStartDate.text = experience.startDate
+        holder.tvEndDate.text = experience.endDate
+        holder.tvDetails.text = experience.details
     }
 
     override fun getItemCount(): Int {

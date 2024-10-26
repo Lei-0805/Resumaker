@@ -1,7 +1,6 @@
 package com.example.resumaker
 
-import Project
-import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -12,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 class ProjectActivity : AppCompatActivity() {
 
@@ -23,9 +21,8 @@ class ProjectActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var projectAdapter: ProjectAdapter
 
-    private var projectList = mutableListOf<Project>() // To hold the project data
+    private var projectList = mutableListOf<Project>()
 
-    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -42,8 +39,8 @@ class ProjectActivity : AppCompatActivity() {
         projectAdapter = ProjectAdapter(projectList)
         recyclerView.adapter = projectAdapter
 
-        // Load existing project data if needed
-        loadProjectData()
+        // Load saved projects and refresh the RecyclerView
+        loadSavedProjects()
 
         btnSaveProjects.setOnClickListener {
             if (areFieldsValid()) {
@@ -52,7 +49,7 @@ class ProjectActivity : AppCompatActivity() {
         }
 
         ibtnBack.setOnClickListener {
-            finish()  // Close the current activity
+            finish()
         }
     }
 
@@ -73,50 +70,44 @@ class ProjectActivity : AppCompatActivity() {
     private fun submitProjectData() {
         val projectTitle = etProjTitle.text.toString()
         val projectDescription = etProjDescription.text.toString()
+        val projectEntry = Project(projectTitle = projectTitle, projectDescription = projectDescription)
 
-        // Create an instance of the Project data class
-        val projectEntry = Project(title = projectTitle, description = projectDescription)
+        val resumeData = loadResumeData()
+        resumeData.projects.add(projectEntry)
 
-        // Add the new project entry to the project list
+        saveResumeData(resumeData)
+
         projectList.add(projectEntry)
-
-        // Save updated project data
-        saveProjectData()
-
-        // Refresh the RecyclerView to show the new entry
         projectAdapter.notifyDataSetChanged()
 
-        // Feedback to the user
         Toast.makeText(this, "Project saved successfully", Toast.LENGTH_SHORT).show()
-
-        // Clear the input fields
         clearFields()
     }
 
-    private fun saveProjectData() {
-        val sharedPreferences = getSharedPreferences("ResumeData", MODE_PRIVATE)
+    private fun saveResumeData(resumeData: ResumeData) {
+        val sharedPreferences = getSharedPreferences("ResumeData", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
-
-        // Convert the projectList to a JSON string using Gson
         val gson = Gson()
-        val json = gson.toJson(projectList)
-
-        // Save the JSON string in SharedPreferences
-        editor.putString("projectList", json)
+        editor.putString("resumeData", gson.toJson(resumeData))
         editor.apply()
     }
 
-    private fun loadProjectData() {
-        val sharedPreferences = getSharedPreferences("ResumeData", MODE_PRIVATE)
+    private fun loadResumeData(): ResumeData {
+        val sharedPreferences = getSharedPreferences("ResumeData", Context.MODE_PRIVATE)
         val gson = Gson()
-        val json = sharedPreferences.getString("projectList", null)
-
-        if (json != null) {
-            // Deserialize the JSON string back to a List<Project>
-            val type = object : TypeToken<MutableList<Project>>() {}.type
-            projectList = gson.fromJson(json, type) ?: mutableListOf()
-            projectAdapter.notifyDataSetChanged() // Refresh the adapter after loading data
+        val json = sharedPreferences.getString("resumeData", null)
+        return if (json != null) {
+            gson.fromJson(json, ResumeData::class.java)
+        } else {
+            ResumeData()
         }
+    }
+
+    private fun loadSavedProjects() {
+        val resumeData = loadResumeData()
+        projectList.clear()
+        projectList.addAll(resumeData.projects)
+        projectAdapter.notifyDataSetChanged()
     }
 
     private fun clearFields() {

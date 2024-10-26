@@ -1,21 +1,20 @@
 package com.example.resumaker
 
-import Award
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class AwardAdapter(private val awardList: MutableList<Award>) : RecyclerView.Adapter<AwardAdapter.AwardViewHolder>() {
+class AwardAdapter(private val awardsList: MutableList<Award>) : RecyclerView.Adapter<AwardAdapter.AwardViewHolder>() {
 
     class AwardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val tvAchievement: TextView = itemView.findViewById(R.id.tv_achievement)
+        private val tvAchievement: TextView = itemView.findViewById(R.id.tv_award)
         private val tvAwardDescription: TextView = itemView.findViewById(R.id.tv_award_description)
 
         fun bind(award:Award) {
-            tvAchievement.text = award.achievement
-            tvAwardDescription.text = award.description.toString()
+            tvAchievement.text = award.award
+            tvAwardDescription.text = award.awardDescription.toString()
         }
     }
 
@@ -25,9 +24,10 @@ class AwardAdapter(private val awardList: MutableList<Award>) : RecyclerView.Ada
     }
 
     override fun onBindViewHolder(holder: AwardViewHolder, position: Int) {
-        val award = awardList[position]
+        val award = awardsList[position]
         holder.bind(award)
     }
 
-    override fun getItemCount(): Int = awardList.size
+    override fun getItemCount(): Int = awardsList.size
 }
+

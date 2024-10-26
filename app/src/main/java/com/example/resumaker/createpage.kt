@@ -1,13 +1,5 @@
 package com.example.resumaker
 
-import Award
-import Education
-import Experience
-import Objective
-import PersonalDetail
-import Project
-import ResumeData
-import Skill
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
@@ -85,12 +77,19 @@ class createpage : AppCompatActivity() {
         val awardsList = loadDataFromSharedPreferences<Award>("awardsList")
         val projectList = loadDataFromSharedPreferences<Project>("projectList")
 
+        // Wrap objectiveText in a list of Objective objects
+        val objectivesList = if (objectiveText.isNotEmpty()) {
+            listOf(Objective(objectiveText))
+        } else {
+            emptyList()
+        }
+
         return ResumeData(
             personalDetails = listOf(personalDetails),
             education = educationList,
             experience = experienceList,
             skills = skillsList,
-            objective = Objective(objectiveText),  // Ensure objective is wrapped in Objective
+            objectives = objectivesList.toMutableList(),
             projects = projectList,
             awards = awardsList
         )

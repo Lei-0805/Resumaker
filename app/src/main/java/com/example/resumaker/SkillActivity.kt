@@ -1,6 +1,5 @@
 package com.example.resumaker
 
-import Skill
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
@@ -13,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 class SkillActivity : AppCompatActivity() {
 
@@ -77,11 +75,14 @@ class SkillActivity : AppCompatActivity() {
         // Create an instance of the Skill data class
         val skillEntry = Skill(skillName = skillName)
 
-        // Add the new skill entry to the skill list
-        skillList.add(skillEntry)
+        // Load current ResumeData
+        val resumeData = loadResumeData()
 
-        // Save updated skill data
-        saveSkillData()
+        // Add the new skill entry to the resumeData
+        resumeData.skills.add(skillEntry)
+
+        // Save updated ResumeData
+        saveResumeData(resumeData)
 
         // Show feedback to the user
         Toast.makeText(this, "Skill details saved", Toast.LENGTH_SHORT).show()
@@ -89,36 +90,38 @@ class SkillActivity : AppCompatActivity() {
         // Clear the input fields
         clearFields()
 
-        // Notify the adapter of the new data (insert at last position)
+        // Update the local skill list and notify the adapter
+        skillList.add(skillEntry)
         skillAdapter.notifyItemInserted(skillList.size - 1)
     }
 
-    // Save skill data to SharedPreferences
-    private fun saveSkillData() {
+    // Load ResumeData from SharedPreferences
+    private fun loadResumeData(): ResumeData {
+        val sharedPreferences = getSharedPreferences("ResumeData", MODE_PRIVATE)
+        val gson = Gson()
+        val json = sharedPreferences.getString("resumeData", null)
+        return if (json != null) {
+            gson.fromJson(json, ResumeData::class.java)
+        } else {
+            ResumeData()  // Provide default data if nothing is found
+        }
+    }
+
+    // Save updated ResumeData to SharedPreferences
+    private fun saveResumeData(resumeData: ResumeData) {
         val sharedPreferences = getSharedPreferences("ResumeData", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
-
-        // Convert the skillList to a JSON string using Gson
         val gson = Gson()
-        val json = gson.toJson(skillList)
-
-        // Save the JSON string in SharedPreferences
-        editor.putString("skillList", json)
+        editor.putString("resumeData", gson.toJson(resumeData))
         editor.apply()
     }
 
-    // Load skill data from SharedPreferences
+    // Load skill data from SharedPreferences (if needed for the adapter)
     private fun loadSkillData() {
-        val sharedPreferences = getSharedPreferences("ResumeData", MODE_PRIVATE)
-        val gson = Gson()
-        val json = sharedPreferences.getString("skillList", null)
-
-        if (json != null) {
-            // Deserialize the JSON string back to a MutableList<Skill>
-            val type = object : TypeToken<MutableList<Skill>>() {}.type
-            skillList = gson.fromJson(json, type) ?: mutableListOf()
-            skillAdapter.notifyDataSetChanged()
-        }
+        val resumeData = loadResumeData()
+        skillList.clear() // Clear the existing list
+        skillList.addAll(resumeData.skills) // Add the skills from ResumeData
+        skillAdapter.notifyDataSetChanged() // Notify the adapter about data changes
     }
 
     // Clear input fields

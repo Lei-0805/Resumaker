@@ -1,6 +1,5 @@
 package com.example.resumaker
 
-import Objective
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,7 @@ class ObjectiveAdapter(private val objectiveList: MutableList<Objective>) : Recy
     class ObjectiveViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvObjectiveText: TextView = itemView.findViewById(R.id.tv_objective_text)
 
-        fun bind(objective:Objective) {
+        fun bind(objective: Objective) {
             tvObjectiveText.text = objective.objectiveText
         }
     }

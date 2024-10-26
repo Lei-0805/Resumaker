@@ -1,15 +1,17 @@
+package com.example.resumaker
+
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class ResumeData(
-    val personalDetails: List<PersonalDetail>,
-    val education: List<Education>,
-    val experience: List<Experience>,
-    val skills: List<Skill>,
-    val objective: Objective,
-    val projects: List<Project>,
-    val awards: List<Award>
+    val personalDetails: List<PersonalDetail> = emptyList(),
+    var education: MutableList<Education> = mutableListOf(),
+    var experience: MutableList<Experience> = mutableListOf(),
+    var skills: MutableList<Skill> = mutableListOf(),
+    var objectives: MutableList<Objective> = mutableListOf(),
+    var projects: MutableList<Project> = mutableListOf(),
+    var awards: MutableList<Award> = mutableListOf()
 ) : Parcelable
 
 @Parcelize
@@ -50,12 +52,12 @@ data class Objective(
 
 @Parcelize
 data class Project(
-    val title: String,
-    val description: String
+    val projectTitle: String,
+    val projectDescription: String
 ) : Parcelable
 
 @Parcelize
 data class Award(
-    val achievement: String,
-    val description: String
+    val award: String,
+    val awardDescription: String
 ) : Parcelable

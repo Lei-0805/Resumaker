@@ -1,6 +1,5 @@
 package com.example.resumaker
 
-import PersonalDetail
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
@@ -11,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 
 class PersonalDetailsActivity : AppCompatActivity() {
 
@@ -48,6 +48,9 @@ class PersonalDetailsActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         personalDetailsAdapter = PersonalDetailsAdapter(personalDetailsList)
         recyclerView.adapter = personalDetailsAdapter
+
+        // Load existing personal details if any
+        loadPersonalDetails()
 
         // Save button click listener
         btnSave.setOnClickListener {
@@ -109,20 +112,36 @@ class PersonalDetailsActivity : AppCompatActivity() {
         personalDetailsList.clear() // Assuming only one set of details is needed
         personalDetailsList.add(personalDetail)
 
-        // Save personal details in SharedPreferences
-        val sharedPreferences = getSharedPreferences("ResumeData", MODE_PRIVATE).edit()
-        sharedPreferences.putString("name", name)
-        sharedPreferences.putString("desiredJob", desiredJob)
-        sharedPreferences.putString("address", address)
-        sharedPreferences.putString("email", email)
-        sharedPreferences.putString("phone", phone)
-        sharedPreferences.putString("linkedIn", linkedIn)
-        sharedPreferences.apply()
+        // Save personal details in ResumeData
+        val resumeData = ResumeData(personalDetails = personalDetailsList)
+        saveResumeData(resumeData)
 
         Toast.makeText(this, "Personal Details saved successfully", Toast.LENGTH_SHORT).show()
 
         // Clear input fields after saving
         clearInputFields()
+    }
+
+    // Save ResumeData to SharedPreferences
+    private fun saveResumeData(resumeData: ResumeData) {
+        val sharedPreferences = getSharedPreferences("ResumeData", MODE_PRIVATE).edit()
+        val gson = Gson()
+        val json = gson.toJson(resumeData)
+        sharedPreferences.putString("resumeData", json)
+        sharedPreferences.apply()
+    }
+
+    // Load existing personal details from SharedPreferences
+    private fun loadPersonalDetails() {
+        val sharedPreferences = getSharedPreferences("ResumeData", MODE_PRIVATE)
+        val gson = Gson()
+        val json = sharedPreferences.getString("resumeData", null)
+        if (json != null) {
+            val resumeData = gson.fromJson(json, ResumeData::class.java)
+            personalDetailsList.clear()
+            personalDetailsList.addAll(resumeData.personalDetails)
+            personalDetailsAdapter.notifyDataSetChanged()
+        }
     }
 
     // Clear input fields

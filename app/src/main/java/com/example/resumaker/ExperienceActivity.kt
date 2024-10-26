@@ -1,18 +1,16 @@
 package com.example.resumaker
 
-import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 class ExperienceActivity : AppCompatActivity() {
 
@@ -25,13 +23,10 @@ class ExperienceActivity : AppCompatActivity() {
     private lateinit var ibtnBack: ImageButton
     private lateinit var recyclerView: RecyclerView
     private lateinit var experienceAdapter: ExperienceAdapter
+    private var experienceList: MutableList<Experience> = mutableListOf()
 
-    private var experienceList = mutableListOf<Map<String, String>>() // Holds the experience data as a list of maps
-
-    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.experience)
 
         // Initialize views
@@ -44,23 +39,25 @@ class ExperienceActivity : AppCompatActivity() {
         ibtnBack = findViewById(R.id.ibtn_back4)
         recyclerView = findViewById(R.id.recyclerView_experience)
 
-        // Set up RecyclerView
+        // Set up RecyclerView with the ExperienceAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
         experienceAdapter = ExperienceAdapter(experienceList)
         recyclerView.adapter = experienceAdapter
 
-        // Load existing experience data
+        // Load existing experiences into the RecyclerView
         loadExperienceData()
 
+        // Button click listeners
         btnSaveExp.setOnClickListener {
             if (areFieldsValid()) {
-                submitExperienceData()
+                saveExperienceData()
+                Toast.makeText(this, "Experience details saved", Toast.LENGTH_SHORT).show()
+                clearFields()
             }
         }
 
         ibtnBack.setOnClickListener {
-            val intent = Intent(this, createpage::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, createpage::class.java))
             finish()
         }
     }
@@ -91,61 +88,47 @@ class ExperienceActivity : AppCompatActivity() {
         }
     }
 
-    private fun submitExperienceData() {
+    private fun saveExperienceData() {
         val company = etCompanyExp.text.toString()
         val job = etJobExp.text.toString()
         val details = etDetailsExp.text.toString()
         val startdate = etSdate.text.toString()
         val enddate = etEdate.text.toString()
 
-        // Create a map for the experience entry
-        val experienceEntry = mapOf(
-            "company" to company,
-            "jobTitle" to job,
-            "startDate" to startdate,
-            "endDate" to enddate,
-            "details" to details
-        )
+        // Create an instance of the Experience data class
+        val experienceEntry = Experience(company, job, startdate, enddate, details)
 
-        // Add the new experience entry to the experience list
+        // Add to the local list and notify adapter
         experienceList.add(experienceEntry)
-
-        // Save updated experience data
-        saveExperienceData()
-
-        // Refresh the RecyclerView to show the new entry
         experienceAdapter.notifyDataSetChanged()
 
-        // Feedback to the user
-        Toast.makeText(this, "Experience details saved", Toast.LENGTH_SHORT).show()
+        // Load current ResumeData
+        val resumeData = loadResumeData()
+        resumeData.experience = experienceList
 
-        // Clear the input fields
-        clearFields()
-    }
-
-    private fun saveExperienceData() {
-        val sharedPreferences = getSharedPreferences("ResumeData", MODE_PRIVATE)
+        // Save updated ResumeData
+        val sharedPreferences = getSharedPreferences("ResumeData", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
-
-        // Convert the experienceList to a JSON string using Gson
         val gson = Gson()
-        val json = gson.toJson(experienceList)
-
-        // Save the JSON string in SharedPreferences
-        editor.putString("experienceList", json)
+        editor.putString("resumeData", gson.toJson(resumeData))
         editor.apply()
     }
 
     private fun loadExperienceData() {
-        val sharedPreferences = getSharedPreferences("ResumeData", MODE_PRIVATE)
-        val gson = Gson()
-        val json = sharedPreferences.getString("experienceList", null)
+        val resumeData = loadResumeData()
+        experienceList.clear()
+        experienceList.addAll(resumeData.experience)
+        experienceAdapter.notifyDataSetChanged()
+    }
 
-        if (json != null) {
-            // Deserialize the JSON string back to a List<Map<String, String>>
-            val type = object : TypeToken<MutableList<Map<String, String>>>() {}.type
-            experienceList = gson.fromJson(json, type) ?: mutableListOf()
-            experienceAdapter.notifyDataSetChanged() // Refresh the adapter after loading data
+    private fun loadResumeData(): ResumeData {
+        val sharedPreferences = getSharedPreferences("ResumeData", Context.MODE_PRIVATE)
+        val gson = Gson()
+        val json = sharedPreferences.getString("resumeData", null)
+        return if (json != null) {
+            gson.fromJson(json, ResumeData::class.java)
+        } else {
+            ResumeData()  // Provide default data if nothing is found
         }
     }
 

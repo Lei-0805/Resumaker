@@ -1,19 +1,16 @@
 package com.example.resumaker
 
-import Education
-import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 class EducationActivity : AppCompatActivity() {
 
@@ -22,15 +19,13 @@ class EducationActivity : AppCompatActivity() {
     private lateinit var etSchoolYear: EditText
     private lateinit var btnSaveEduc: Button
     private lateinit var ibtnBack: ImageButton
-    private lateinit var recyclerViewEducation: RecyclerView
     private lateinit var educationAdapter: EducationAdapter
+    private lateinit var recyclerView: RecyclerView
 
-    private var educationList = mutableListOf<Education>() // To hold the education data
+    private var educationList = mutableListOf<Education>() // List to hold education data
 
-    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.education)
 
         etProgram = findViewById(R.id.et_program)
@@ -38,25 +33,26 @@ class EducationActivity : AppCompatActivity() {
         etSchoolYear = findViewById(R.id.et_schoolyear_college)
         btnSaveEduc = findViewById(R.id.btn_save_educ)
         ibtnBack = findViewById(R.id.ibtn_back3)
-        recyclerViewEducation = findViewById(R.id.recyclerView_education)
+        recyclerView = findViewById(R.id.recyclerView_education)
+
+        // Set up RecyclerView
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        educationAdapter = EducationAdapter(educationList)
+        recyclerView.adapter = educationAdapter
 
         // Load existing education data
         loadEducationData()
 
-        // Set up RecyclerView
-        educationAdapter = EducationAdapter(educationList)
-        recyclerViewEducation.layoutManager = LinearLayoutManager(this)
-        recyclerViewEducation.adapter = educationAdapter
-
         btnSaveEduc.setOnClickListener {
             if (areFieldsValid()) {
-                submitEducationData()
+                saveEducationData()
+                Toast.makeText(this, "Education details saved", Toast.LENGTH_SHORT).show()
+                clearFields()
             }
         }
 
         ibtnBack.setOnClickListener {
-            val intent = Intent(this, createpage::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, createpage::class.java))
             finish()
         }
     }
@@ -79,7 +75,7 @@ class EducationActivity : AppCompatActivity() {
         }
     }
 
-    private fun submitEducationData() {
+    private fun saveEducationData() {
         val program = etProgram.text.toString()
         val school = etSchool.text.toString()
         val schoolYear = etSchoolYear.text.toString()
@@ -87,45 +83,49 @@ class EducationActivity : AppCompatActivity() {
         // Create an instance of the Education data class
         val educationEntry = Education(program = program, school = school, schoolYear = schoolYear)
 
-        // Add the new education entry to the education list
+        // Add the new education entry to the list
         educationList.add(educationEntry)
 
-        // Save updated education data
-        saveEducationData()
+        // Save updated ResumeData
+        saveResumeData()
 
-        // Feedback to the user
-        Toast.makeText(this, "Education details saved", Toast.LENGTH_SHORT).show()
-
-        // Clear the input fields
-        clearFields()
-
-        // Notify the adapter of the new data
+        // Refresh the RecyclerView to show the new entry
         educationAdapter.notifyDataSetChanged()
     }
 
-    private fun saveEducationData() {
-        val sharedPreferences = getSharedPreferences("ResumeData", MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
+    private fun loadEducationData() {
+        // Load current ResumeData
+        val resumeData = loadResumeData()
 
-        // Convert the educationList to a JSON string using Gson
-        val gson = Gson()
-        val json = gson.toJson(educationList)
-
-        // Save the JSON string in SharedPreferences
-        editor.putString("educationList", json)
-        editor.apply()
+        // Add existing education entries to the list
+        educationList.clear() // Clear the existing list before adding new items
+        educationList.addAll(resumeData.education)
+        educationAdapter.notifyDataSetChanged() // Refresh the RecyclerView
     }
 
-    private fun loadEducationData() {
-        val sharedPreferences = getSharedPreferences("ResumeData", MODE_PRIVATE)
+    private fun loadResumeData(): ResumeData {
+        val sharedPreferences = getSharedPreferences("ResumeData", Context.MODE_PRIVATE)
         val gson = Gson()
-        val json = sharedPreferences.getString("educationList", null)
-
-        if (json != null) {
-            // Deserialize the JSON string back to a MutableList<Education>
-            val type = object : TypeToken<MutableList<Education>>() {}.type
-            educationList = gson.fromJson(json, type) ?: mutableListOf()
+        val json = sharedPreferences.getString("resumeData", null)
+        return if (json != null) {
+            gson.fromJson(json, ResumeData::class.java)
+        } else {
+            ResumeData()  // Provide default data if nothing is found
         }
+    }
+
+    private fun saveResumeData() {
+        val sharedPreferences = getSharedPreferences("ResumeData", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        val gson = Gson()
+        val resumeData = loadResumeData() // Load current ResumeData
+
+        // Update the ResumeData with the current educationList
+        resumeData.education = educationList
+
+        // Save updated ResumeData
+        editor.putString("resumeData", gson.toJson(resumeData))
+        editor.apply()
     }
 
     private fun clearFields() {

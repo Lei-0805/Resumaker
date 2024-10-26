@@ -1,6 +1,5 @@
 package com.example.resumaker
 
-import Project
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +13,8 @@ class ProjectAdapter(private val projectList: MutableList<Project>) : RecyclerVi
         private val tvDescription: TextView = itemView.findViewById(R.id.tv_proj_description)
 
         fun bind(project: Project) {
-            tvTitle.text = project.title
-            tvDescription.text = project.description
+            tvTitle.text = project.projectTitle
+            tvDescription.text = project.projectDescription
         }
     }
 
