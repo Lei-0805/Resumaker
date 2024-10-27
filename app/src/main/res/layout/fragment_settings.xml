@@ -30,17 +30,6 @@
         android:layout_marginTop="100dp"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btn_import"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="start"
-            android:text="Import Profiles"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            android:fontFamily="@font/poppins_semibold"
-            android:background="?attr/selectableItemBackground"/>
-
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
@@ -48,11 +37,11 @@
             android:src="@drawable/line_4" />
 
         <Button
-            android:id="@+id/btn_history"
+            android:id="@+id/btn_created_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="start"
-            android:text="Resume History"
+            android:text="Created Profile"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:fontFamily="@font/poppins_semibold"

@@ -1,12 +1,10 @@
 package com.example.resumaker
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,9 +16,8 @@ import androidx.fragment.app.Fragment
 @Suppress("DEPRECATION")
 class SettingsFragment : Fragment() {
 
-    private lateinit var btn_import: Button
+    private lateinit var btn_created_profiles: Button
     private lateinit var btn_log_out: Button
-    private val FILE_SELECT_CODE = 0
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -30,11 +27,12 @@ class SettingsFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_settings, container, false)
 
-        btn_import = view.findViewById(R.id.btn_import)
         btn_log_out = view.findViewById(R.id.btn_log_out)
+        btn_created_profiles = view.findViewById(R.id.btn_created_profile)
 
-        btn_import.setOnClickListener {
-            openFileManager()
+        btn_created_profiles.setOnClickListener {
+            // Navigate to CreatedProfilesFragment or CreatedProfilesActivity
+            navigateToCreatedProfiles()
         }
 
         btn_log_out.setOnClickListener {
@@ -44,30 +42,11 @@ class SettingsFragment : Fragment() {
         return view
     }
 
-    private fun openFileManager() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "application/pdf"
-        intent.addCategory(Intent.CATEGORY_OPENABLE)
-
-        try {
-            startActivityForResult(
-                Intent.createChooser(intent, "Select a file to import"),
-                FILE_SELECT_CODE
-            )
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-        }
+    private fun navigateToCreatedProfiles() {
+        val intent = Intent(requireContext(), createdprofiles::class.java)
+        startActivity(intent)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == FILE_SELECT_CODE && resultCode == Activity.RESULT_OK) {
-            data?.data?.let { uri: Uri ->
-                // Handle the file URI here, e.g., upload or process the file
-                println("File Uri: $uri")
-            }
-        }
-    }
 
     private fun showLogoutDialog() {
         val dialog = Dialog(requireContext())

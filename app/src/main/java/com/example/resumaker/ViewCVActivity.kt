@@ -19,6 +19,7 @@ class ViewCVActivity : AppCompatActivity() {
 
     private lateinit var webView: WebView
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.view_cv)
