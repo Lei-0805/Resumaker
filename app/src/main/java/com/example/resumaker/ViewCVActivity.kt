@@ -1,9 +1,19 @@
 package com.example.resumaker
 
+import android.annotation.SuppressLint
+import android.content.ContentValues
+import android.graphics.pdf.PdfDocument
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.webkit.WebView
+import android.webkit.WebViewClient
+import android.widget.ImageButton
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class ViewCVActivity : AppCompatActivity() {
 
@@ -24,6 +34,12 @@ class ViewCVActivity : AppCompatActivity() {
         val finalHtml = bindResumeData(htmlContent, resumeData)
 
         webView.loadDataWithBaseURL(null, finalHtml, "text/html", "UTF-8", null)
+
+        // Setup download button
+        val downloadButton: ImageButton = findViewById(R.id.download_button)
+        downloadButton.setOnClickListener {
+            createPdfFromWebView()
+        }
     }
 
     private fun loadHtmlTemplate(): String {
@@ -110,5 +126,46 @@ class ViewCVActivity : AppCompatActivity() {
                 "${it.projectTitle}<br>Description: ${it.projectDescription}"
             }
         }
+    }
+
+    private fun createPdfFromWebView() {
+        webView.webViewClient = object : WebViewClient() {
+            @SuppressLint("NewApi")
+            override fun onPageFinished(view: WebView?, url: String?) {
+                val pdfFileName = "Resume_${SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis())}.pdf"
+                val contentValues = ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, pdfFileName)
+                    put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf")
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+                }
+
+                val resolver = contentResolver
+                val pdfUri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
+
+                if (pdfUri != null) {
+                    resolver.openOutputStream(pdfUri)?.use { outputStream ->
+                        // Create a PdfDocument
+                        val pdfDocument = PdfDocument()
+                        val pageInfo = PdfDocument.PageInfo.Builder(webView.width, webView.height, 1).create()
+                        val page = pdfDocument.startPage(pageInfo)
+
+                        // Draw the webView content on the PDF page's canvas
+                        val canvas = page.canvas
+                        webView.draw(canvas)
+
+                        // Finish the page and write to the output stream
+                        pdfDocument.finishPage(page)
+                        pdfDocument.writeTo(outputStream)
+                        pdfDocument.close()
+
+                        Toast.makeText(this@ViewCVActivity, "Resume downloaded as PDF in Downloads folder", Toast.LENGTH_LONG).show()
+                    }
+                } else {
+                    Toast.makeText(this@ViewCVActivity, "Failed to create file", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        webView.reload()  // Ensure the WebView content is fully rendered before capturing as PDF
     }
 }
