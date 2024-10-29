@@ -36,7 +36,7 @@ class start_page : AppCompatActivity() {
 
     // Function to check if the user setup is complete
     private fun isUserSetupComplete(): Boolean {
-        val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences(sharedPrefFile, Context.MODE_PRIVATE)
         return sharedPreferences.getBoolean("is_setup_complete", false) // Default is false if not set
     }
 

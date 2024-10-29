@@ -1,5 +1,6 @@
 package com.example.resumaker
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.text.InputFilter
@@ -82,6 +83,7 @@ class EducationActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun saveEducationData() {
         val program = etProgram.text.toString()
         val school = etSchool.text.toString()
@@ -100,6 +102,7 @@ class EducationActivity : AppCompatActivity() {
         educationAdapter.notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun loadEducationData() {
         // Load current ResumeData
         val resumeData = loadResumeData()

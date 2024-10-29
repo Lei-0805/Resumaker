@@ -1,5 +1,6 @@
 package com.example.resumaker
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.text.InputFilter
@@ -96,6 +97,7 @@ class ExperienceActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun saveExperienceData() {
         val company = etCompanyExp.text.toString()
         val job = etJobExp.text.toString()
@@ -122,6 +124,7 @@ class ExperienceActivity : AppCompatActivity() {
         editor.apply()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun loadExperienceData() {
         val resumeData = loadResumeData()
         experienceList.clear()

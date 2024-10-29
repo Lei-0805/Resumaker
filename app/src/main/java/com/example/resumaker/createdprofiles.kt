@@ -42,6 +42,7 @@ class createdprofiles : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun loadProfileData() {
         val sharedPreferences = getSharedPreferences("ResumeData", Context.MODE_PRIVATE)
         val gson = Gson()

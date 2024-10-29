@@ -1,5 +1,6 @@
 package com.example.resumaker
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.text.InputFilter
@@ -74,6 +75,7 @@ class ProjectActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun submitProjectData() {
         val projectTitle = etProjTitle.text.toString()
         val projectDescription = etProjDescription.text.toString()
@@ -110,6 +112,7 @@ class ProjectActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun loadSavedProjects() {
         val resumeData = loadResumeData()
         projectList.clear()

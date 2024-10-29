@@ -13,7 +13,6 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 
-@Suppress("DEPRECATION")
 class SettingsFragment : Fragment() {
 
     private lateinit var btn_created_profiles: Button

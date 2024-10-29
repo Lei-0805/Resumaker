@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.textfield.TextInputEditText
@@ -55,7 +54,7 @@ class sign_up : AppCompatActivity() {
         val url = "http://192.168.1.9:8000/api/signup_users"
 
         val request = object : StringRequest(
-            Request.Method.POST, url,
+            Method.POST, url,
             { response ->
                 try {
                     val jsonResponse = JSONObject(response)

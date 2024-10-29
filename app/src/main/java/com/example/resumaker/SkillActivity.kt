@@ -118,6 +118,7 @@ class SkillActivity : AppCompatActivity() {
     }
 
     // Load skill data from SharedPreferences (if needed for the adapter)
+    @SuppressLint("NotifyDataSetChanged")
     private fun loadSkillData() {
         val resumeData = loadResumeData()
         skillList.clear() // Clear the existing list

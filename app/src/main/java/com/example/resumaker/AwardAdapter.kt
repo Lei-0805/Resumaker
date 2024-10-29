@@ -14,7 +14,7 @@ class AwardAdapter(private val awardsList: MutableList<Award>) : RecyclerView.Ad
 
         fun bind(award:Award) {
             tvAchievement.text = award.award
-            tvAwardDescription.text = award.awardDescription.toString()
+            tvAwardDescription.text = award.awardDescription
         }
     }
 

@@ -138,6 +138,7 @@ class PersonalDetailsActivity : AppCompatActivity() {
     }
 
     // Load existing personal details from SharedPreferences
+    @SuppressLint("NotifyDataSetChanged")
     private fun loadPersonalDetails() {
         val sharedPreferences = getSharedPreferences("ResumeData", MODE_PRIVATE)
         val gson = Gson()

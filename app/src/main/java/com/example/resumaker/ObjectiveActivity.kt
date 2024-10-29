@@ -1,5 +1,6 @@
 package com.example.resumaker
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.text.InputFilter
@@ -66,6 +67,7 @@ class ObjectiveActivity : AppCompatActivity() {
         saveResumeData(resumeData)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun loadObjectives() {
         val resumeData = loadResumeData()
         objectiveList.clear()

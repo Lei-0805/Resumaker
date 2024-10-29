@@ -1,5 +1,6 @@
 package com.example.resumaker
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.text.InputFilter
@@ -101,6 +102,7 @@ class AwardActivity : AppCompatActivity() {
         awardAdapter.notifyItemInserted(awardList.size - 1)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun loadAwardData() {
         val resumeData = loadResumeData()
         awardList.clear()

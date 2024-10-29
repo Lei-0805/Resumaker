@@ -95,10 +95,10 @@ class RateFragment : Fragment() {
             Request.Method.GET,
             url,
             null,
-            Response.Listener { response ->
+            { response ->
                 handleFetchResponse(response)
             },
-            Response.ErrorListener { error: VolleyError ->
+            { error: VolleyError ->
                 showToast("Error: ${error.message}")
             }
         )
@@ -126,7 +126,7 @@ class RateFragment : Fragment() {
         }
 
         val jsonObjectRequest = object : JsonObjectRequest(
-            Request.Method.POST,
+            Method.POST,
             url,
             jsonObject,
             Response.Listener { response ->
