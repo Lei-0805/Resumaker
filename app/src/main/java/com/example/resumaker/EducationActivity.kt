@@ -1,11 +1,10 @@
 package com.example.resumaker
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
+import android.text.InputFilter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,7 +17,6 @@ class EducationActivity : AppCompatActivity() {
     private lateinit var etSchool: EditText
     private lateinit var etSchoolYear: EditText
     private lateinit var btnSaveEduc: Button
-    private lateinit var ibtnBack: ImageButton
     private lateinit var educationAdapter: EducationAdapter
     private lateinit var recyclerView: RecyclerView
 
@@ -32,13 +30,15 @@ class EducationActivity : AppCompatActivity() {
         etSchool = findViewById(R.id.et_school)
         etSchoolYear = findViewById(R.id.et_schoolyear_college)
         btnSaveEduc = findViewById(R.id.btn_save_educ)
-        ibtnBack = findViewById(R.id.ibtn_back3)
         recyclerView = findViewById(R.id.recyclerView_education)
 
         // Set up RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(this)
         educationAdapter = EducationAdapter(educationList)
         recyclerView.adapter = educationAdapter
+
+        // Set validation filters
+        setValidationFilters()
 
         // Load existing education data
         loadEducationData()
@@ -50,11 +50,18 @@ class EducationActivity : AppCompatActivity() {
                 clearFields()
             }
         }
+    }
 
-        ibtnBack.setOnClickListener {
-            startActivity(Intent(this, createpage::class.java))
-            finish()
+    // Set input filters for validation
+    private fun setValidationFilters() {
+        // Prevent numbers in etProgram and etSchool
+        val noNumbersFilter = InputFilter { source, _, _, _, _, _ ->
+            if (source.matches(Regex("[0-9]"))) "" else null
         }
+        //Set the filter that do not allow numbers and exceeding input in school year
+        etProgram.filters = arrayOf(noNumbersFilter)
+        etSchool.filters = arrayOf(noNumbersFilter)
+        etSchoolYear.filters = arrayOf(InputFilter.LengthFilter(9))
     }
 
     private fun areFieldsValid(): Boolean {

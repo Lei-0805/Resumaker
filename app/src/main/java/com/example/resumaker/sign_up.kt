@@ -1,6 +1,7 @@
 package com.example.resumaker
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -19,7 +20,7 @@ class sign_up : AppCompatActivity() {
     lateinit var til_confirm_password: TextInputEditText
     lateinit var btnSignUp: Button
     lateinit var btnLogIn1: Button
-    private val sharedPrefFile = "UserPrefs"
+    private val sharedPrefFile = "UserPrefs" // Ensure this matches the one in start_page
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,17 +58,12 @@ class sign_up : AppCompatActivity() {
             Request.Method.POST, url,
             { response ->
                 try {
-                    // Try parsing JSON response
                     val jsonResponse = JSONObject(response)
                     val message = jsonResponse.getString("message")
 
                     if (message == "Sign up successful") {
-                        // Save login state in SharedPreferences after successful signup
-                        val sharedPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE)
-                        with(sharedPreferences.edit()) {
-                            putBoolean("isLoggedIn", true)
-                            apply()
-                        }
+                        // Save setup complete flag in SharedPreferences
+                        setSetupComplete()
 
                         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                         navigateTo(navfunction::class.java)
@@ -75,7 +71,6 @@ class sign_up : AppCompatActivity() {
                         Toast.makeText(this, "Signup failed: $message", Toast.LENGTH_SHORT).show()
                     }
                 } catch (e: Exception) {
-                    // Log the response for debugging
                     Toast.makeText(this, "Error parsing response: ${response}", Toast.LENGTH_LONG).show()
                 }
             },
@@ -83,8 +78,6 @@ class sign_up : AppCompatActivity() {
                 if (error.networkResponse != null) {
                     val statusCode = error.networkResponse.statusCode
                     val errorData = error.networkResponse.data?.let { String(it) }
-
-                    // Log full error response for debugging
                     Toast.makeText(this, "Error: $statusCode - $errorData", Toast.LENGTH_LONG).show()
                 } else {
                     Toast.makeText(this, "Network error: ${error.message}", Toast.LENGTH_LONG).show()
@@ -101,6 +94,13 @@ class sign_up : AppCompatActivity() {
 
         queue.add(request)
     }
+
+    // Function to set setup completion in SharedPreferences
+    private fun setSetupComplete() {
+        val sharedPreferences = getSharedPreferences(sharedPrefFile, Context.MODE_PRIVATE)
+        sharedPreferences.edit().putBoolean("is_setup_complete", true).apply() // Set the flag
+    }
+
     private fun navigateTo(nextPage: Class<*>) {
         val intent = Intent(this, nextPage)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)

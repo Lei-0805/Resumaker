@@ -19,31 +19,18 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingConstraints">
 
-            <ImageButton
-                android:id="@+id/ibtn_back6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
-                android:contentDescription="navigate"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/textView"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.43"
-                app:srcCompat="@drawable/back" />
-
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginEnd="80dp"
                 android:fontFamily="@font/poppins_bold"
                 android:text="Personal Details"
                 android:textColor="@color/white"
                 android:textSize="30sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.479" />
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -97,10 +84,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                android:autofillHints="username"
                 android:background="@drawable/edit_textbg"
                 android:ems="10"
                 android:hint="Desired Job"
+                android:importantForAutofill="no"
                 android:inputType="text"
                 android:padding="15dp" />
 
@@ -168,6 +155,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
+                android:autofillHints="phone"
                 android:background="@drawable/edit_textbg"
                 android:ems="10"
                 android:hint="9XXXXXXXXX"

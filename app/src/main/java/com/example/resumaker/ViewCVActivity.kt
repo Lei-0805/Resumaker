@@ -61,12 +61,12 @@ class ViewCVActivity : AppCompatActivity() {
 
     private fun bindResumeData(template: String, data: ResumeData): String {
         return template
-            .replace("{name}", data.personalDetails.getOrNull(0)?.name ?: "N/A")
-            .replace("{desiredJob}", data.personalDetails.getOrNull(0)?.desiredJob ?: "N/A")
-            .replace("{email}", data.personalDetails.getOrNull(0)?.email ?: "N/A")
-            .replace("{address}", data.personalDetails.getOrNull(0)?.address ?: "N/A")
-            .replace("{phone}", data.personalDetails.getOrNull(0)?.phone ?: "N/A")
-            .replace("{linkedin}", data.personalDetails.getOrNull(0)?.linkedIn ?: "N/A")
+            .replace("{name}", data.personalDetails.getOrNull(0)?.name ?: "Name")
+            .replace("{desiredJob}", data.personalDetails.getOrNull(0)?.desiredJob ?: "Desired Job")
+            .replace("{email}", data.personalDetails.getOrNull(0)?.email ?: "Email")
+            .replace("{address}", data.personalDetails.getOrNull(0)?.address ?: "Address")
+            .replace("{phone}", data.personalDetails.getOrNull(0)?.phone ?: "Phone")
+            .replace("{linkedin}", data.personalDetails.getOrNull(0)?.linkedIn ?: "LinkedIn")
             .replace("{objective}", formatObjectives(data.objectives))
             .replace("{education}", formatEducation(data.education))
             .replace("{experience}", formatExperience(data.experience))

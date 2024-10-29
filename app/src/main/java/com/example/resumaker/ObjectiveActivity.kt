@@ -2,9 +2,9 @@ package com.example.resumaker
 
 import android.content.Context
 import android.os.Bundle
+import android.text.InputFilter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,7 +15,6 @@ class ObjectiveActivity : AppCompatActivity() {
 
     private lateinit var etObjective: EditText
     private lateinit var btnSaveObjective: Button
-    private lateinit var ibtnBack: ImageButton
     private lateinit var recyclerView: RecyclerView
     private lateinit var objectiveAdapter: ObjectiveAdapter
     private var objectiveList = mutableListOf<Objective>()
@@ -26,13 +25,15 @@ class ObjectiveActivity : AppCompatActivity() {
 
         etObjective = findViewById(R.id.et_obj)
         btnSaveObjective = findViewById(R.id.btn_save_obj)
-        ibtnBack = findViewById(R.id.ibtn_back5)
         recyclerView = findViewById(R.id.recyclerView_objective)
 
         // Set up RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(this)
         objectiveAdapter = ObjectiveAdapter(objectiveList)
         recyclerView.adapter = objectiveAdapter
+
+        // Set validation filters
+        setValidationFilters()
 
         // Load objectives from saved data
         loadObjectives()
@@ -48,10 +49,15 @@ class ObjectiveActivity : AppCompatActivity() {
                 etObjective.error = "Field is empty"
             }
         }
+    }
 
-        ibtnBack.setOnClickListener {
-            finish()
+    private fun setValidationFilters() {
+        //Prevent numbers to be entered in etObjective
+        val noNumbersFilter = InputFilter { source, _, _, _, _, _ ->
+            if (source.matches(Regex("[0-9]"))) "" else null
         }
+        //Set the filter that do not allow numbers
+        etObjective.filters = arrayOf(noNumbersFilter)
     }
 
     private fun saveObjectiveData(objectiveText: String) {

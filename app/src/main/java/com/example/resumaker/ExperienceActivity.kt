@@ -1,11 +1,10 @@
 package com.example.resumaker
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
+import android.text.InputFilter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,7 +19,6 @@ class ExperienceActivity : AppCompatActivity() {
     private lateinit var etEdate: EditText
     private lateinit var etDetailsExp: EditText
     private lateinit var btnSaveExp: Button
-    private lateinit var ibtnBack: ImageButton
     private lateinit var recyclerView: RecyclerView
     private lateinit var experienceAdapter: ExperienceAdapter
     private var experienceList: MutableList<Experience> = mutableListOf()
@@ -36,7 +34,6 @@ class ExperienceActivity : AppCompatActivity() {
         etEdate = findViewById(R.id.et_edate)
         etDetailsExp = findViewById(R.id.et_details_exp)
         btnSaveExp = findViewById(R.id.btn_save_exp)
-        ibtnBack = findViewById(R.id.ibtn_back4)
         recyclerView = findViewById(R.id.recyclerView_experience)
 
         // Set up RecyclerView with the ExperienceAdapter
@@ -47,7 +44,10 @@ class ExperienceActivity : AppCompatActivity() {
         // Load existing experiences into the RecyclerView
         loadExperienceData()
 
-        // Button click listeners
+        // Set validation filters
+        setValidationFilters()
+
+        // Button click listener
         btnSaveExp.setOnClickListener {
             if (areFieldsValid()) {
                 saveExperienceData()
@@ -55,11 +55,19 @@ class ExperienceActivity : AppCompatActivity() {
                 clearFields()
             }
         }
+    }
 
-        ibtnBack.setOnClickListener {
-            startActivity(Intent(this, createpage::class.java))
-            finish()
+    private fun setValidationFilters() {
+        // Prevent numbers in etDetailsExp, etCompanyExp, and etJobTitle
+        val noNumbersFilter = InputFilter { source, _, _, _, _, _ ->
+            if (source.matches(Regex("[0-9]"))) "" else null
         }
+        //Set the filter that do not allow numbers and exceeding input in sdate & edate
+        etDetailsExp.filters = arrayOf(noNumbersFilter)
+        etCompanyExp.filters = arrayOf(noNumbersFilter)
+        etJobExp.filters = arrayOf(noNumbersFilter)
+        etSdate.filters = arrayOf(InputFilter.LengthFilter(4))
+        etEdate.filters = arrayOf(InputFilter.LengthFilter(4))
     }
 
     private fun areFieldsValid(): Boolean {

@@ -18,6 +18,7 @@ class SettingsFragment : Fragment() {
 
     private lateinit var btn_created_profiles: Button
     private lateinit var btn_log_out: Button
+    private val sharedPrefFile = "UserPrefs"
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -74,11 +75,13 @@ class SettingsFragment : Fragment() {
         dialog.show()
     }
 
+    // In SettingsFragment
     private fun logoutUser() {
-        val sharedPreferences: SharedPreferences = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val sharedPreferences: SharedPreferences = requireContext().getSharedPreferences(sharedPrefFile, Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
-        editor.putBoolean("is_logged_in", false) // Ensure logged in state is false
-        editor.putBoolean("is_signed_in", false) // Ensure signed in state is false
+        editor.putBoolean("is_logged_in", false)
+        editor.putBoolean("is_signed_in", false)
+        editor.putBoolean("is_setup_complete", false) // Clear setup completion if needed
         editor.apply()
 
         Toast.makeText(requireContext(), "Logged out successfully", Toast.LENGTH_SHORT).show()

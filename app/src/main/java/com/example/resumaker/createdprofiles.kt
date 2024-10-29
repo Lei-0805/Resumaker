@@ -49,11 +49,11 @@ class createdprofiles : AppCompatActivity() {
 
         if (json != null) {
             val resumeData = gson.fromJson(json, ResumeData::class.java)
-            profile_name.text = resumeData.personalDetails.getOrNull(0)?.name ?: "N/A"
-            profile_desired_job.text = resumeData.personalDetails.getOrNull(0)?.desiredJob ?: "N/A"
+            profile_name.text = resumeData.personalDetails.getOrNull(0)?.name ?: "Name"
+            profile_desired_job.text = resumeData.personalDetails.getOrNull(0)?.desiredJob ?: "Desired Job"
         } else {
-            profile_name.text = "N/A"
-            profile_desired_job.text = "N/A"
+            profile_name.text = "Name"
+            profile_desired_job.text = "Desired Job"
         }
     }
 

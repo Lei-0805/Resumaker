@@ -2,9 +2,9 @@ package com.example.resumaker
 
 import android.content.Context
 import android.os.Bundle
+import android.text.InputFilter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -17,7 +17,6 @@ class ProjectActivity : AppCompatActivity() {
     private lateinit var etProjTitle: EditText
     private lateinit var etProjDescription: EditText
     private lateinit var btnSaveProjects: Button
-    private lateinit var ibtnBack: ImageButton
     private lateinit var recyclerView: RecyclerView
     private lateinit var projectAdapter: ProjectAdapter
 
@@ -31,7 +30,6 @@ class ProjectActivity : AppCompatActivity() {
         etProjTitle = findViewById(R.id.et_proj_title)
         etProjDescription = findViewById(R.id.et_proj_description)
         btnSaveProjects = findViewById(R.id.btn_save_projects)
-        ibtnBack = findViewById(R.id.ibtn_back7)
         recyclerView = findViewById(R.id.recyclerView_projects)
 
         // Set up RecyclerView
@@ -42,15 +40,24 @@ class ProjectActivity : AppCompatActivity() {
         // Load saved projects and refresh the RecyclerView
         loadSavedProjects()
 
+        // Set validation filters
+        setValidationFilters()
+
         btnSaveProjects.setOnClickListener {
             if (areFieldsValid()) {
                 submitProjectData()
             }
         }
+    }
 
-        ibtnBack.setOnClickListener {
-            finish()
+    private fun setValidationFilters() {
+        //Prevent the etProjectTitle and etProjectDescription to input numbers
+        val noNumbersFilter = InputFilter { source, _, _, _, _, _ ->
+            if (source.matches(Regex("[0-9]"))) "" else null
         }
+        //Set the filter that do not allow numbers
+        etProjTitle.filters = arrayOf(noNumbersFilter)
+        etProjDescription.filters = arrayOf(noNumbersFilter)
     }
 
     private fun areFieldsValid(): Boolean {

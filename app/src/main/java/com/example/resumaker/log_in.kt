@@ -1,6 +1,7 @@
 package com.example.resumaker
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -18,7 +19,7 @@ class log_in : AppCompatActivity() {
     lateinit var til_password: TextInputEditText
     lateinit var btn_LogIn: Button
     lateinit var btn_signup1: Button
-    private val sharedPrefFile = "UserPrefs"
+    private val sharedPrefFile = "UserPrefs" // Ensure this matches the one in sign_up
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,29 +50,21 @@ class log_in : AppCompatActivity() {
             Request.Method.POST, url,
             { response ->
                 try {
-                    // Log the raw response for debugging
                     println("Raw response: $response")
 
-                    // Try parsing the JSON response
                     val jsonResponse = JSONObject(response)
                     val message = jsonResponse.getString("message")
 
                     if (message == "Login successful") {
-                        // Save login state in SharedPreferences
-                        val sharedPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE)
-                        with(sharedPreferences.edit()) {
-                            putBoolean("isLoggedIn", true)
-                            apply()
-                        }
+                        // Save setup complete flag in SharedPreferences
+                        setSetupComplete()
 
                         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-
                         navigateTo(navfunction::class.java)
                     } else {
                         Toast.makeText(this, "Login failed: $message", Toast.LENGTH_SHORT).show()
                     }
                 } catch (e: Exception) {
-                    // Log and show the response in case of parsing failure
                     Toast.makeText(this, "Error parsing response: $response", Toast.LENGTH_LONG).show()
                     println("Error parsing response: ${e.message}")
                 }
@@ -80,8 +73,6 @@ class log_in : AppCompatActivity() {
                 if (error.networkResponse != null) {
                     val statusCode = error.networkResponse.statusCode
                     val errorData = error.networkResponse.data?.let { String(it) }
-
-                    // Log full error details for debugging
                     Toast.makeText(this, "Error: $statusCode - $errorData", Toast.LENGTH_LONG).show()
                     println("Error: $statusCode - $errorData")
                 } else {
@@ -98,6 +89,12 @@ class log_in : AppCompatActivity() {
         }
 
         queue.add(request)
+    }
+
+    // Function to set setup completion in SharedPreferences
+    private fun setSetupComplete() {
+        val sharedPreferences = getSharedPreferences(sharedPrefFile, Context.MODE_PRIVATE)
+        sharedPreferences.edit().putBoolean("is_setup_complete", true).apply() // Set the flag
     }
 
     private fun navigateTo(nextPage: Class<*>) {

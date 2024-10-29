@@ -1,11 +1,10 @@
 package com.example.resumaker
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
+import android.text.InputFilter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -17,7 +16,6 @@ class SkillActivity : AppCompatActivity() {
 
     private lateinit var etSkill: EditText
     private lateinit var btnSaveSkill: Button
-    private lateinit var ibtnBack: ImageButton
     private lateinit var recyclerView: RecyclerView
     private lateinit var skillAdapter: SkillAdapter
 
@@ -32,13 +30,15 @@ class SkillActivity : AppCompatActivity() {
         // Initialize UI components
         etSkill = findViewById(R.id.et_skill)
         btnSaveSkill = findViewById(R.id.btn_save_skill)
-        ibtnBack = findViewById(R.id.ibtn_back9)
         recyclerView = findViewById(R.id.recyclerView_skill)
 
         // Set up RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(this)
         skillAdapter = SkillAdapter(skillList)
         recyclerView.adapter = skillAdapter
+
+        // Set validation filters
+        setValidationFilters()
 
         // Load existing skill data
         loadSkillData()
@@ -49,13 +49,14 @@ class SkillActivity : AppCompatActivity() {
                 submitSkillData()
             }
         }
+    }
 
-        // Back button click listener
-        ibtnBack.setOnClickListener {
-            val intent = Intent(this, createpage::class.java)
-            startActivity(intent)
-            finish()
+    private fun setValidationFilters() {
+        // Prevent numbers in etSkillName
+        val nameJobFilter = InputFilter { source, _, _, _, _, _ ->
+            if (source.matches(Regex("[0-9]"))) "" else null
         }
+        etSkill.filters = arrayOf(nameJobFilter)
     }
 
     // Validate input fields

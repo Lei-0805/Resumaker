@@ -1,11 +1,10 @@
 package com.example.resumaker
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
+import android.text.InputFilter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,9 +16,9 @@ class AwardActivity : AppCompatActivity() {
     private lateinit var etAchievement: EditText
     private lateinit var etAwardDescription: EditText
     private lateinit var btnSaveAward: Button
-    private lateinit var ibtnBack: ImageButton
     private lateinit var recyclerView: RecyclerView
     private lateinit var awardAdapter: AwardAdapter
+
     private var awardList: MutableList<Award> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,13 +28,15 @@ class AwardActivity : AppCompatActivity() {
         etAchievement = findViewById(R.id.et_award_title)
         etAwardDescription = findViewById(R.id.et_award_description)
         btnSaveAward = findViewById(R.id.btn_save_award)
-        ibtnBack = findViewById(R.id.ibtn_back2)
         recyclerView = findViewById(R.id.recyclerView_awards)
 
         // Set up RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(this)
         awardAdapter = AwardAdapter(awardList)
         recyclerView.adapter = awardAdapter
+
+        // Set validation filters
+        setValidationFilters()
 
         loadAwardData()  // Load existing awards
 
@@ -47,12 +48,16 @@ class AwardActivity : AppCompatActivity() {
                 loadAwardData()  // Reload awards to show the new one
             }
         }
+    }
 
-        ibtnBack.setOnClickListener {
-            val intent = Intent(this, createpage::class.java)
-            startActivity(intent)
-            finish()
+    private fun setValidationFilters() {
+        //Prevent numbers to be entered in etAchievement and etAwardDescription
+        val noNumbersFilter = InputFilter { source, _, _, _, _, _ ->
+            if (source.matches(Regex("[0-9]"))) "" else null
         }
+        //Set the filter that do not allow numbers
+        etAchievement.filters = arrayOf(noNumbersFilter)
+        etAwardDescription.filters = arrayOf(noNumbersFilter)
     }
 
     private fun areFieldsValid(): Boolean {

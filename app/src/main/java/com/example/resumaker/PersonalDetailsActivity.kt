@@ -1,11 +1,10 @@
 package com.example.resumaker
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
+import android.text.InputFilter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,7 +20,6 @@ class PersonalDetailsActivity : AppCompatActivity() {
     private lateinit var etPhone: EditText
     private lateinit var etLinkedIn: EditText
     private lateinit var btnSave: Button
-    private lateinit var btnBack: ImageButton
     private lateinit var recyclerView: RecyclerView
     private lateinit var personalDetailsAdapter: PersonalDetailsAdapter
 
@@ -41,7 +39,6 @@ class PersonalDetailsActivity : AppCompatActivity() {
         etPhone = findViewById(R.id.et_phone_perdet)
         etLinkedIn = findViewById(R.id.et_linkedin)
         btnSave = findViewById(R.id.btn_save_perdet)
-        btnBack = findViewById(R.id.ibtn_back6)
 
         // Set up RecyclerView
         recyclerView = findViewById(R.id.recyclerView_personal_details)
@@ -49,8 +46,11 @@ class PersonalDetailsActivity : AppCompatActivity() {
         personalDetailsAdapter = PersonalDetailsAdapter(personalDetailsList)
         recyclerView.adapter = personalDetailsAdapter
 
-        // Load existing personal details if any
+        // Load existing personal details if the personal details is filled up and saved
         loadPersonalDetails()
+
+        // Set validation filters
+        setValidationFilters()
 
         // Save button click listener
         btnSave.setOnClickListener {
@@ -58,13 +58,19 @@ class PersonalDetailsActivity : AppCompatActivity() {
                 submitData()
             }
         }
+    }
 
-        // Back button click listener
-        btnBack.setOnClickListener {
-            val intent = Intent(this, createpage::class.java)
-            startActivity(intent)
-            finish()
+    // Set filters and input validations
+    private fun setValidationFilters() {
+        // Prevent numbers in etName and etDesiredJob
+        val nameJobFilter = InputFilter { source, _, _, _, _, _ ->
+            if (source.matches(Regex("[0-9]"))) "" else null
         }
+        etName.filters = arrayOf(nameJobFilter)
+        etDesiredJob.filters = arrayOf(nameJobFilter)
+
+        // Limit phone number to 13 digits
+        etPhone.filters = arrayOf(InputFilter.LengthFilter(13))
     }
 
     // Validate input fields
