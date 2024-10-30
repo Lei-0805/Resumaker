@@ -2,10 +2,12 @@ package com.example.resumaker
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputFilter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,18 +18,21 @@ class AwardActivity : AppCompatActivity() {
 
     private lateinit var etAchievement: EditText
     private lateinit var etAwardDescription: EditText
+    private lateinit var ibtnBackAward: ImageButton
     private lateinit var btnSaveAward: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var awardAdapter: AwardAdapter
 
     private var awardList: MutableList<Award> = mutableListOf()
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.award)
 
         etAchievement = findViewById(R.id.et_award_title)
         etAwardDescription = findViewById(R.id.et_award_description)
+        ibtnBackAward = findViewById(R.id.ibtnBackAward)
         btnSaveAward = findViewById(R.id.btn_save_award)
         recyclerView = findViewById(R.id.recyclerView_awards)
 
@@ -49,6 +54,17 @@ class AwardActivity : AppCompatActivity() {
                 loadAwardData()  // Reload awards to show the new one
             }
         }
+        ibtnBackAward.setOnClickListener{
+            navigateTo(createpage::class.java)
+        }
+    }
+
+    // Function to navigate to the next page
+    private fun navigateTo(nextPage: Class<*>) {
+        val intent = Intent(this, nextPage)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
     }
 
     private fun setValidationFilters() {

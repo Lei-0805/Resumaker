@@ -1,10 +1,12 @@
 package com.example.resumaker
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputFilter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +21,7 @@ class PersonalDetailsActivity : AppCompatActivity() {
     private lateinit var etEmail: EditText
     private lateinit var etPhone: EditText
     private lateinit var etLinkedIn: EditText
+    private lateinit var ibtnBackPersonalDetails: ImageButton
     private lateinit var btnSave: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var personalDetailsAdapter: PersonalDetailsAdapter
@@ -38,6 +41,7 @@ class PersonalDetailsActivity : AppCompatActivity() {
         etEmail = findViewById(R.id.et_email_perdet)
         etPhone = findViewById(R.id.et_phone_perdet)
         etLinkedIn = findViewById(R.id.et_linkedin)
+        ibtnBackPersonalDetails = findViewById(R.id.ibtnBackPersonalDetails)
         btnSave = findViewById(R.id.btn_save_perdet)
 
         // Set up RecyclerView
@@ -58,6 +62,17 @@ class PersonalDetailsActivity : AppCompatActivity() {
                 submitData()
             }
         }
+        ibtnBackPersonalDetails.setOnClickListener{
+            navigateTo(createpage::class.java)
+        }
+    }
+
+    // Function to navigate to the next page
+    private fun navigateTo(nextPage: Class<*>) {
+        val intent = Intent(this, nextPage)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
     }
 
     // Set filters and input validations
@@ -69,8 +84,8 @@ class PersonalDetailsActivity : AppCompatActivity() {
         etName.filters = arrayOf(nameJobFilter)
         etDesiredJob.filters = arrayOf(nameJobFilter)
 
-        // Limit phone number to 13 digits
-        etPhone.filters = arrayOf(InputFilter.LengthFilter(13))
+        // Limit phone number to 15 digits
+        etPhone.filters = arrayOf(InputFilter.LengthFilter(15))
     }
 
     // Validate input fields

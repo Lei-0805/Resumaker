@@ -2,10 +2,12 @@ package com.example.resumaker
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputFilter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +19,7 @@ class ProjectActivity : AppCompatActivity() {
 
     private lateinit var etProjTitle: EditText
     private lateinit var etProjDescription: EditText
+    private lateinit var ibtnBackProject: ImageButton
     private lateinit var btnSaveProjects: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var projectAdapter: ProjectAdapter
@@ -30,6 +33,7 @@ class ProjectActivity : AppCompatActivity() {
 
         etProjTitle = findViewById(R.id.et_proj_title)
         etProjDescription = findViewById(R.id.et_proj_description)
+        ibtnBackProject = findViewById(R.id.ibtnBackProject)
         btnSaveProjects = findViewById(R.id.btn_save_projects)
         recyclerView = findViewById(R.id.recyclerView_projects)
 
@@ -49,6 +53,17 @@ class ProjectActivity : AppCompatActivity() {
                 submitProjectData()
             }
         }
+        ibtnBackProject.setOnClickListener{
+            navigateTo(createpage::class.java)
+        }
+    }
+
+    // Function to navigate to the next page
+    private fun navigateTo(nextPage: Class<*>) {
+        val intent = Intent(this, nextPage)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
     }
 
     private fun setValidationFilters() {

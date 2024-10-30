@@ -2,10 +2,12 @@ package com.example.resumaker
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputFilter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +19,7 @@ class EducationActivity : AppCompatActivity() {
     private lateinit var etProgram: EditText
     private lateinit var etSchool: EditText
     private lateinit var etSchoolYear: EditText
+    private lateinit var ibtnBackEducation: ImageButton
     private lateinit var btnSaveEduc: Button
     private lateinit var educationAdapter: EducationAdapter
     private lateinit var recyclerView: RecyclerView
@@ -30,6 +33,7 @@ class EducationActivity : AppCompatActivity() {
         etProgram = findViewById(R.id.et_program)
         etSchool = findViewById(R.id.et_school)
         etSchoolYear = findViewById(R.id.et_schoolyear_college)
+        ibtnBackEducation = findViewById(R.id.ibtnBackEducation)
         btnSaveEduc = findViewById(R.id.btn_save_educ)
         recyclerView = findViewById(R.id.recyclerView_education)
 
@@ -51,6 +55,17 @@ class EducationActivity : AppCompatActivity() {
                 clearFields()
             }
         }
+        ibtnBackEducation.setOnClickListener{
+            navigateTo(createpage::class.java)
+        }
+    }
+
+    // Function to navigate to the next page
+    private fun navigateTo(nextPage: Class<*>) {
+        val intent = Intent(this, nextPage)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
     }
 
     // Set input filters for validation

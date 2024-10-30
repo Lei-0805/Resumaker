@@ -43,7 +43,7 @@ class log_in : AppCompatActivity() {
 
     private fun login(username: String, create_password: String) {
         val queue = Volley.newRequestQueue(this)
-        val url = "http://192.168.1.9:8000/api/login_users"
+        val url = "http://192.168.127.6:8000/api/login_users"
 
         val request = object : StringRequest(
             Method.POST, url,

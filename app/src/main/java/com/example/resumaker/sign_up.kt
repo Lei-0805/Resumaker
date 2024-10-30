@@ -51,7 +51,7 @@ class sign_up : AppCompatActivity() {
 
     private fun signup(username: String, create_password: String, confirm_password: String) {
         val queue = Volley.newRequestQueue(this)
-        val url = "http://192.168.1.9:8000/api/signup_users"
+        val url = "http://192.168.127.6:8000/api/signup_users"
 
         val request = object : StringRequest(
             Method.POST, url,

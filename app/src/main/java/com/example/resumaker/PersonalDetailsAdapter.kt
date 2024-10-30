@@ -28,11 +28,13 @@ class PersonalDetailsAdapter(private val personalDetailsList: MutableList<Person
         }
     }
 
+    //Function to view the saved data via use of view holder
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonalDetailsViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_personal_detail, parent, false)
         return PersonalDetailsViewHolder(view)
     }
 
+    //Function to bind the save data to the view holder
     override fun onBindViewHolder(holder: PersonalDetailsViewHolder, position: Int) {
         val personalDetails = personalDetailsList[position]
         holder.bind(personalDetails)

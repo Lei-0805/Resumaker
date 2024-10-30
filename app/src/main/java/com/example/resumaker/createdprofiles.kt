@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -15,6 +16,7 @@ class createdprofiles : AppCompatActivity() {
 
     private lateinit var profile_name: TextView
     private lateinit var profile_desired_job: TextView
+    private lateinit var ibtnBackCreatedProfiles: ImageButton
     private lateinit var btn_edit: Button
     private lateinit var btn_delete: Button
 
@@ -26,6 +28,7 @@ class createdprofiles : AppCompatActivity() {
 
         profile_name = findViewById(R.id.profile_name)
         profile_desired_job = findViewById(R.id.profile_desired_job)
+        ibtnBackCreatedProfiles = findViewById(R.id.ibtnBackCreatedProfiles)
         btn_edit = findViewById(R.id.btn_edit)
         btn_delete = findViewById(R.id.btn_delete)
 
@@ -40,6 +43,17 @@ class createdprofiles : AppCompatActivity() {
         btn_delete.setOnClickListener {
             deleteResumeData()
         }
+        ibtnBackCreatedProfiles.setOnClickListener{
+            navigateTo(navfunction::class.java)
+        }
+    }
+
+    // Function to navigate to the next page
+    private fun navigateTo(nextPage: Class<*>) {
+        val intent = Intent(this, nextPage)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
     }
 
     @SuppressLint("SetTextI18n")

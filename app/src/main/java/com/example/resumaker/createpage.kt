@@ -19,6 +19,7 @@ class createpage : AppCompatActivity() {
     private lateinit var ibtnObjective: ImageButton
     private lateinit var ibtnProjects: ImageButton
     private lateinit var ibtnAwards: ImageButton
+    private lateinit var ibtnBackCreatepage: ImageButton
     private lateinit var btnViewCv: Button
 
     @SuppressLint("MissingInflatedId")
@@ -35,6 +36,7 @@ class createpage : AppCompatActivity() {
         ibtnObjective = findViewById(R.id.ibtn_objective)
         ibtnProjects = findViewById(R.id.ibtn_projects)
         ibtnAwards = findViewById(R.id.ibtn_awards)
+        ibtnBackCreatepage = findViewById(R.id.ibtnBackCreatepage)
         btnViewCv = findViewById(R.id.btn_viewcv)
 
         // Set up click listeners for each button
@@ -50,6 +52,17 @@ class createpage : AppCompatActivity() {
             val resumeData = gatherResumeData()
             navigateToViewCVActivity(resumeData)
         }
+        ibtnBackCreatepage.setOnClickListener{
+            navigateTo(navfunction::class.java)
+        }
+    }
+
+    // Function to navigate to the next page
+    private fun navigateTo(nextPage: Class<*>) {
+        val intent = Intent(this, nextPage)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
     }
 
     private fun navigateToActivity(activity: Class<*>) {

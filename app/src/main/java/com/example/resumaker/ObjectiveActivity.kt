@@ -2,10 +2,12 @@ package com.example.resumaker
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputFilter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +17,7 @@ import com.google.gson.Gson
 class ObjectiveActivity : AppCompatActivity() {
 
     private lateinit var etObjective: EditText
+    private lateinit var ibtnBackObjective: ImageButton
     private lateinit var btnSaveObjective: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var objectiveAdapter: ObjectiveAdapter
@@ -25,6 +28,7 @@ class ObjectiveActivity : AppCompatActivity() {
         setContentView(R.layout.objective)
 
         etObjective = findViewById(R.id.et_obj)
+        ibtnBackObjective = findViewById(R.id.ibtnBackObjective)
         btnSaveObjective = findViewById(R.id.btn_save_obj)
         recyclerView = findViewById(R.id.recyclerView_objective)
 
@@ -50,6 +54,17 @@ class ObjectiveActivity : AppCompatActivity() {
                 etObjective.error = "Field is empty"
             }
         }
+        ibtnBackObjective.setOnClickListener{
+            navigateTo(createpage::class.java)
+        }
+    }
+
+    // Function to navigate to the next page
+    private fun navigateTo(nextPage: Class<*>) {
+        val intent = Intent(this, nextPage)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
     }
 
     private fun setValidationFilters() {

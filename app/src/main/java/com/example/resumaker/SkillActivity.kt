@@ -1,10 +1,12 @@
 package com.example.resumaker
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputFilter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +17,7 @@ import com.google.gson.Gson
 class SkillActivity : AppCompatActivity() {
 
     private lateinit var etSkill: EditText
+    private lateinit var ibtnBackSkill: ImageButton
     private lateinit var btnSaveSkill: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var skillAdapter: SkillAdapter
@@ -29,6 +32,7 @@ class SkillActivity : AppCompatActivity() {
 
         // Initialize UI components
         etSkill = findViewById(R.id.et_skill)
+        ibtnBackSkill = findViewById(R.id.ibtnBackSkill)
         btnSaveSkill = findViewById(R.id.btn_save_skill)
         recyclerView = findViewById(R.id.recyclerView_skill)
 
@@ -49,6 +53,17 @@ class SkillActivity : AppCompatActivity() {
                 submitSkillData()
             }
         }
+        ibtnBackSkill.setOnClickListener{
+            navigateTo(createpage::class.java)
+        }
+    }
+
+    // Function to navigate to the next page
+    private fun navigateTo(nextPage: Class<*>) {
+        val intent = Intent(this, nextPage)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
     }
 
     private fun setValidationFilters() {
