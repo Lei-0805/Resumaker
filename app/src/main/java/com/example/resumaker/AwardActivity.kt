@@ -1,7 +1,6 @@
 package com.example.resumaker
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputFilter
@@ -12,7 +11,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
+import com.android.volley.Request
+import com.android.volley.RequestQueue
+import com.android.volley.toolbox.JsonArrayRequest
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
+import org.json.JSONArray
+import org.json.JSONObject
 
 class AwardActivity : AppCompatActivity() {
 
@@ -22,8 +27,10 @@ class AwardActivity : AppCompatActivity() {
     private lateinit var btnSaveAward: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var awardAdapter: AwardAdapter
+    private lateinit var requestQueue: RequestQueue
 
     private var awardList: MutableList<Award> = mutableListOf()
+    private val serverUrl = "http://192.168.13.6:8000/api/award_data" // Replace with your actual endpoint
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,17 +48,19 @@ class AwardActivity : AppCompatActivity() {
         awardAdapter = AwardAdapter(awardList)
         recyclerView.adapter = awardAdapter
 
+        // Initialize Volley request queue
+        requestQueue = Volley.newRequestQueue(this)
+
         // Set validation filters
         setValidationFilters()
 
-        loadAwardData()  // Load existing awards
+        // Load existing awards from database
+        loadAwardsFromDatabase()
 
         btnSaveAward.setOnClickListener {
             if (areFieldsValid()) {
-                saveAwardData()
-                Toast.makeText(this, "Award saved successfully", Toast.LENGTH_SHORT).show()
+                saveAwardToDatabase()
                 clearFields()
-                loadAwardData()  // Reload awards to show the new one
             }
         }
         ibtnBackAward.setOnClickListener{
@@ -68,11 +77,9 @@ class AwardActivity : AppCompatActivity() {
     }
 
     private fun setValidationFilters() {
-        //Prevent numbers to be entered in etAchievement and etAwardDescription
         val noNumbersFilter = InputFilter { source, _, _, _, _, _ ->
             if (source.matches(Regex("[0-9]"))) "" else null
         }
-        //Set the filter that do not allow numbers
         etAchievement.filters = arrayOf(noNumbersFilter)
         etAwardDescription.filters = arrayOf(noNumbersFilter)
     }
@@ -91,50 +98,59 @@ class AwardActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveAwardData() {
+    private fun saveAwardToDatabase() {
         val achievement = etAchievement.text.toString()
         val awardDescription = etAwardDescription.text.toString()
 
-        // Create an instance of the Award data class
-        val awardEntry = Award(award = achievement, awardDescription = awardDescription)
+        // Create JSON payload for request
+        val params = JSONObject()
+        params.put("award", achievement)
+        params.put("awardDescription", awardDescription)
 
-        // Update the award list
-        awardList.add(awardEntry)
+        // Volley POST request to save award
+        val request = JsonObjectRequest(
+            Request.Method.POST, serverUrl, params,
+            { response ->
+                Toast.makeText(this, "Award saved successfully", Toast.LENGTH_SHORT).show()
+                loadAwardsFromDatabase() // Refresh awards list
+            },
+            { error ->
+                Toast.makeText(this, "Failed to save awards data", Toast.LENGTH_LONG)
+                    .show()
+            }
+        )
 
-        // Load current ResumeData
-        val resumeData = loadResumeData()
+        // Add request to queue
+        requestQueue.add(request)
+    }
 
-        // Update the ResumeData with the new award entry
-        resumeData.awards.add(awardEntry)
+    private fun loadAwardsFromDatabase() {
+        val request = JsonArrayRequest(
+            Request.Method.GET, serverUrl, null,
+            { response ->
+                parseAndLoadAwards(response)
+            },
+            { error ->
+                Toast.makeText(this, "Failed to load awards data", Toast.LENGTH_LONG).show()
+            }
+        )
 
-        // Save updated ResumeData
-        val sharedPreferences = getSharedPreferences("ResumeData", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        val gson = Gson()
-        editor.putString("resumeData", gson.toJson(resumeData))
-        editor.apply()
-
-        // Notify the adapter of the new item
-        awardAdapter.notifyItemInserted(awardList.size - 1)
+        // Add request to queue
+        requestQueue.add(request)
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun loadAwardData() {
-        val resumeData = loadResumeData()
+    private fun parseAndLoadAwards(response: JSONArray) {
         awardList.clear()
-        awardList.addAll(resumeData.awards)
-        awardAdapter.notifyDataSetChanged()  // Refresh the RecyclerView
-    }
-
-    private fun loadResumeData(): ResumeData {
-        val sharedPreferences = getSharedPreferences("ResumeData", Context.MODE_PRIVATE)
-        val gson = Gson()
-        val json = sharedPreferences.getString("resumeData", null)
-        return if (json != null) {
-            gson.fromJson(json, ResumeData::class.java)
-        } else {
-            ResumeData()  // Provide default data if nothing is found
+        for (i in 0 until response.length()) {
+            val awardJson = response.getJSONObject(i)
+            val award = Award(
+                award = awardJson.getString("award"),
+                awardDescription = awardJson.getString("awardDescription")
+            )
+            awardList.add(award)
         }
+        awardAdapter.notifyDataSetChanged()
     }
 
     private fun clearFields() {

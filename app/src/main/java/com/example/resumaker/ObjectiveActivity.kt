@@ -12,7 +12,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.Request
+import com.android.volley.RequestQueue
+import com.android.volley.toolbox.JsonArrayRequest
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
+import org.json.JSONArray
+import org.json.JSONObject
 
 class ObjectiveActivity : AppCompatActivity() {
 
@@ -21,7 +28,10 @@ class ObjectiveActivity : AppCompatActivity() {
     private lateinit var btnSaveObjective: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var objectiveAdapter: ObjectiveAdapter
+    private lateinit var requestQueue: RequestQueue
+
     private var objectiveList = mutableListOf<Objective>()
+    private val serverUrl = "http://192.168.13.6:8000/api/objective_data" // Replace with your actual API endpoint
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,60 +47,88 @@ class ObjectiveActivity : AppCompatActivity() {
         objectiveAdapter = ObjectiveAdapter(objectiveList)
         recyclerView.adapter = objectiveAdapter
 
+        // Initialize Volley request queue
+        requestQueue = Volley.newRequestQueue(this)
+
         // Set validation filters
         setValidationFilters()
 
-        // Load objectives from saved data
-        loadObjectives()
+        // Load objectives from the database
+        loadObjectivesFromDatabase()
 
         btnSaveObjective.setOnClickListener {
-            val objectiveText = etObjective.text.toString()
-            if (objectiveText.isNotEmpty()) {
-                saveObjectiveData(objectiveText)
-                Toast.makeText(this, "Objective saved successfully", Toast.LENGTH_SHORT).show()
-                etObjective.text.clear()
-                loadObjectives() // Refresh the RecyclerView to show updated objectives
+            if (etObjective.text.isNotEmpty()) {
+                saveObjectiveData()
             } else {
                 etObjective.error = "Field is empty"
             }
         }
-        ibtnBackObjective.setOnClickListener{
+
+        ibtnBackObjective.setOnClickListener {
             navigateTo(createpage::class.java)
         }
     }
 
-    // Function to navigate to the next page
-    private fun navigateTo(nextPage: Class<*>) {
-        val intent = Intent(this, nextPage)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        startActivity(intent)
-        finish()
-    }
-
     private fun setValidationFilters() {
-        //Prevent numbers to be entered in etObjective
         val noNumbersFilter = InputFilter { source, _, _, _, _, _ ->
             if (source.matches(Regex("[0-9]"))) "" else null
         }
-        //Set the filter that do not allow numbers
         etObjective.filters = arrayOf(noNumbersFilter)
     }
 
-    private fun saveObjectiveData(objectiveText: String) {
-        val resumeData = loadResumeData()
-        resumeData.objectives.add(Objective(objectiveText))
-        saveResumeData(resumeData)
+    private fun saveObjectiveData() {
+        val objectiveText = etObjective.text.toString()
+        val objective = Objective(objectiveText = objectiveText)
+
+        // Add to local list and save in SharedPreferences
+        objectiveList.add(objective)
+        saveResumeData()
+
+        // Send the objective to the backend
+        sendObjectiveToDatabase(objective)
+        etObjective.text.clear()
+        loadObjectivesFromDatabase() // Refresh RecyclerView
+    }
+
+    private fun sendObjectiveToDatabase(objective: Objective) {
+        val params = JSONObject()
+        params.put("objectiveText", objective.objectiveText)
+
+        val request = JsonObjectRequest(
+            Request.Method.POST, serverUrl, params,
+            { Toast.makeText(this, "Objective saved successfully", Toast.LENGTH_SHORT).show() },
+            { error -> Toast.makeText(this, "Failed to save objective data", Toast.LENGTH_LONG).show() }
+        )
+
+        // Add request to queue
+        requestQueue.add(request)
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun loadObjectives() {
-        val resumeData = loadResumeData()
+    private fun loadObjectivesFromDatabase() {
+        val request = JsonArrayRequest(
+            Request.Method.GET, serverUrl, null,
+            { response -> parseAndLoadObjectiveData(response) },
+            { error -> Toast.makeText(this, "Failed to load objective data", Toast.LENGTH_LONG).show() }
+        )
+
+        // Add request to queue
+        requestQueue.add(request)
+    }
+
+    private fun parseAndLoadObjectiveData(response: JSONArray) {
         objectiveList.clear()
-        objectiveList.addAll(resumeData.objectives)
+        for (i in 0 until response.length()) {
+            val objectiveJson = response.getJSONObject(i)
+            val objective = Objective(objectiveText = objectiveJson.getString("objectiveText"))
+            objectiveList.add(objective)
+        }
         objectiveAdapter.notifyDataSetChanged()
     }
 
-    private fun saveResumeData(resumeData: ResumeData) {
+    private fun saveResumeData() {
+        val resumeData = loadResumeData()
+        resumeData.objectives = objectiveList
         val sharedPreferences = getSharedPreferences("ResumeData", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         val gson = Gson()
@@ -107,5 +145,12 @@ class ObjectiveActivity : AppCompatActivity() {
         } else {
             ResumeData()
         }
+    }
+
+    private fun navigateTo(nextPage: Class<*>) {
+        val intent = Intent(this, nextPage)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
     }
 }

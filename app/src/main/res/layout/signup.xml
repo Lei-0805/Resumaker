@@ -2,8 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:app="http://schemas.android.com/apk/res-auto"
 xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@drawable/linear_bg">
 
     <LinearLayout
@@ -39,16 +39,6 @@ android:layout_height="match_parent"
             android:textColor="@color/white"
             android:textSize="50sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/poppins_medium"
-            android:text="Create Username"
-            android:textColor="@color/white"
-            android:textSize="15sp" />
-
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutCreateUsername"
             android:layout_width="match_parent"
@@ -68,20 +58,11 @@ android:layout_height="match_parent"
                 android:inputType="text"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/poppins_medium"
-            android:text="Create Password"
-            android:textColor="@color/white"
-            android:textSize="15sp" />
-
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutCreatePassword"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="25dp"
             app:passwordToggleEnabled="true"
             app:boxStrokeColor="@color/white"
             app:hintTextColor="@color/white"
@@ -91,6 +72,7 @@ android:layout_height="match_parent"
                 android:id="@+id/til_create_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
                 android:hint="Create Password"
                 android:fontFamily="@font/poppins_medium"
                 android:textColor="@color/white"
@@ -98,20 +80,11 @@ android:layout_height="match_parent"
                 android:inputType="textPassword"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/poppins_medium"
-            android:text="Confirm Password"
-            android:textColor="@color/white"
-            android:textSize="15sp" />
-
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutConfirmPassword"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="25dp"
             app:passwordToggleEnabled="true"
             android:textColorHint="@color/white"
             app:boxStrokeColor="@color/white"

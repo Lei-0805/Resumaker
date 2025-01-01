@@ -27,7 +27,7 @@ class RateFragment : Fragment() {
     private lateinit var et_feedback: EditText
     private lateinit var btn_rate_submit: Button
 
-    private val BASE_URL = "http://192.168.1.9:8000/"
+    private val BASE_URL = "http://192.168.13.6:8000/"
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -133,7 +133,7 @@ class RateFragment : Fragment() {
                 showToast("Rating submitted successfully")
             },
             Response.ErrorListener { error: VolleyError ->
-                showToast("Failed to submit rating: ${error.message}")
+                showToast("Failed to submit your rating")
             }
         ) {
             override fun getHeaders(): MutableMap<String, String> {

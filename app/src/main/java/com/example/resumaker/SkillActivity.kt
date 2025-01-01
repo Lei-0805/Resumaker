@@ -8,11 +8,16 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
+import com.android.volley.Request
+import com.android.volley.RequestQueue
+import com.android.volley.toolbox.JsonArrayRequest
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
+import org.json.JSONArray
+import org.json.JSONObject
 
 class SkillActivity : AppCompatActivity() {
 
@@ -21,13 +26,13 @@ class SkillActivity : AppCompatActivity() {
     private lateinit var btnSaveSkill: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var skillAdapter: SkillAdapter
+    private lateinit var requestQueue: RequestQueue
 
-    private var skillList = mutableListOf<Skill>() // To hold the skill data
+    private var skillList = mutableListOf<Skill>()
+    private val serverUrl = "http://192.168.13.6:8000/api/skill_data" // Replace with actual URL
 
-    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge() // For visual consistency
         setContentView(R.layout.skill)
 
         // Initialize UI components
@@ -41,40 +46,34 @@ class SkillActivity : AppCompatActivity() {
         skillAdapter = SkillAdapter(skillList)
         recyclerView.adapter = skillAdapter
 
+        // Initialize Volley request queue
+        requestQueue = Volley.newRequestQueue(this)
+
         // Set validation filters
         setValidationFilters()
 
-        // Load existing skill data
-        loadSkillData()
+        // Load existing skill data from backend
+        loadSkillDataFromDatabase()
 
-        // Save skill button click listener
         btnSaveSkill.setOnClickListener {
             if (areFieldsValid()) {
-                submitSkillData()
+                saveSkillDataToDatabase()
+                clearFields()
             }
         }
-        ibtnBackSkill.setOnClickListener{
+
+        ibtnBackSkill.setOnClickListener {
             navigateTo(createpage::class.java)
         }
     }
 
-    // Function to navigate to the next page
-    private fun navigateTo(nextPage: Class<*>) {
-        val intent = Intent(this, nextPage)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        startActivity(intent)
-        finish()
-    }
-
     private fun setValidationFilters() {
-        // Prevent numbers in etSkillName
-        val nameJobFilter = InputFilter { source, _, _, _, _, _ ->
+        val noNumbersFilter = InputFilter { source, _, _, _, _, _ ->
             if (source.matches(Regex("[0-9]"))) "" else null
         }
-        etSkill.filters = arrayOf(nameJobFilter)
+        etSkill.filters = arrayOf(noNumbersFilter)
     }
 
-    // Validate input fields
     private fun areFieldsValid(): Boolean {
         return if (etSkill.text.isNullOrEmpty()) {
             etSkill.error = "Field is empty"
@@ -84,65 +83,67 @@ class SkillActivity : AppCompatActivity() {
         }
     }
 
-    // Submit skill data
-    private fun submitSkillData() {
+    @SuppressLint("NotifyDataSetChanged")
+    private fun saveSkillDataToDatabase() {
         val skillName = etSkill.text.toString()
 
-        // Create an instance of the Skill data class
-        val skillEntry = Skill(skillName = skillName)
+        // JSON payload
+        val params = JSONObject()
+        params.put("skillName", skillName)
 
-        // Load current ResumeData
-        val resumeData = loadResumeData()
+        // Volley POST request
+        val request = JsonObjectRequest(
+            Request.Method.POST, serverUrl, params,
+            { response ->
+                Toast.makeText(this, "Skill saved successfully", Toast.LENGTH_SHORT).show()
+                loadSkillDataFromDatabase() // Reload to show updated data
+            },
+            { error ->
+                Toast.makeText(this, "Failed to save skill data", Toast.LENGTH_LONG).show()
+            }
+        )
 
-        // Add the new skill entry to the resumeData
-        resumeData.skills.add(skillEntry)
-
-        // Save updated ResumeData
-        saveResumeData(resumeData)
-
-        // Show feedback to the user
-        Toast.makeText(this, "Skill details saved", Toast.LENGTH_SHORT).show()
-
-        // Clear the input fields
-        clearFields()
-
-        // Update the local skill list and notify the adapter
-        skillList.add(skillEntry)
-        skillAdapter.notifyItemInserted(skillList.size - 1)
+        // Add request to queue
+        requestQueue.add(request)
     }
 
-    // Load ResumeData from SharedPreferences
-    private fun loadResumeData(): ResumeData {
-        val sharedPreferences = getSharedPreferences("ResumeData", MODE_PRIVATE)
-        val gson = Gson()
-        val json = sharedPreferences.getString("resumeData", null)
-        return if (json != null) {
-            gson.fromJson(json, ResumeData::class.java)
-        } else {
-            ResumeData()  // Provide default data if nothing is found
-        }
-    }
-
-    // Save updated ResumeData to SharedPreferences
-    private fun saveResumeData(resumeData: ResumeData) {
-        val sharedPreferences = getSharedPreferences("ResumeData", MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        val gson = Gson()
-        editor.putString("resumeData", gson.toJson(resumeData))
-        editor.apply()
-    }
-
-    // Load skill data from SharedPreferences (if needed for the adapter)
     @SuppressLint("NotifyDataSetChanged")
-    private fun loadSkillData() {
-        val resumeData = loadResumeData()
-        skillList.clear() // Clear the existing list
-        skillList.addAll(resumeData.skills) // Add the skills from ResumeData
-        skillAdapter.notifyDataSetChanged() // Notify the adapter about data changes
+    private fun loadSkillDataFromDatabase() {
+        val request = JsonArrayRequest(
+            Request.Method.GET, serverUrl, null,
+            { response ->
+                parseAndLoadSkillData(response)
+            },
+            { error ->
+                Toast.makeText(this, "Failed to load skill data", Toast.LENGTH_LONG).show()
+            }
+        )
+
+        // Add request to queue
+        requestQueue.add(request)
     }
 
-    // Clear input fields
+    @SuppressLint("NotifyDataSetChanged")
+    private fun parseAndLoadSkillData(response: JSONArray) {
+        skillList.clear()
+        for (i in 0 until response.length()) {
+            val skillJson = response.getJSONObject(i)
+            val skill = Skill(
+                skillName = skillJson.getString("skillName")
+            )
+            skillList.add(skill)
+        }
+        skillAdapter.notifyDataSetChanged()
+    }
+
     private fun clearFields() {
         etSkill.text.clear()
+    }
+
+    private fun navigateTo(nextPage: Class<*>) {
+        val intent = Intent(this, nextPage)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
     }
 }

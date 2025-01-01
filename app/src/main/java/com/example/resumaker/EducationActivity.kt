@@ -1,7 +1,6 @@
 package com.example.resumaker
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputFilter
@@ -12,7 +11,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
+import com.android.volley.Request
+import com.android.volley.RequestQueue
+import com.android.volley.toolbox.JsonArrayRequest
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
+import org.json.JSONArray
+import org.json.JSONObject
 
 class EducationActivity : AppCompatActivity() {
 
@@ -23,8 +28,10 @@ class EducationActivity : AppCompatActivity() {
     private lateinit var btnSaveEduc: Button
     private lateinit var educationAdapter: EducationAdapter
     private lateinit var recyclerView: RecyclerView
+    private lateinit var requestQueue: RequestQueue
 
-    private var educationList = mutableListOf<Education>() // List to hold education data
+    private var educationList = mutableListOf<Education>()
+    private val serverUrl = "http://192.168.13.6:8000/api/education_data" // Replace with actual URL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,39 +49,31 @@ class EducationActivity : AppCompatActivity() {
         educationAdapter = EducationAdapter(educationList)
         recyclerView.adapter = educationAdapter
 
+        // Initialize Volley request queue
+        requestQueue = Volley.newRequestQueue(this)
+
         // Set validation filters
         setValidationFilters()
 
-        // Load existing education data
-        loadEducationData()
+        // Load existing education data from backend
+        loadEducationDataFromDatabase()
 
         btnSaveEduc.setOnClickListener {
             if (areFieldsValid()) {
-                saveEducationData()
-                Toast.makeText(this, "Education details saved", Toast.LENGTH_SHORT).show()
+                saveEducationDataToDatabase()
                 clearFields()
             }
         }
-        ibtnBackEducation.setOnClickListener{
+
+        ibtnBackEducation.setOnClickListener {
             navigateTo(createpage::class.java)
         }
     }
 
-    // Function to navigate to the next page
-    private fun navigateTo(nextPage: Class<*>) {
-        val intent = Intent(this, nextPage)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        startActivity(intent)
-        finish()
-    }
-
-    // Set input filters for validation
     private fun setValidationFilters() {
-        // Prevent numbers in etProgram and etSchool
         val noNumbersFilter = InputFilter { source, _, _, _, _, _ ->
             if (source.matches(Regex("[0-9]"))) "" else null
         }
-        //Set the filter that do not allow numbers and exceeding input in school year
         etProgram.filters = arrayOf(noNumbersFilter)
         etSchool.filters = arrayOf(noNumbersFilter)
         etSchoolYear.filters = arrayOf(InputFilter.LengthFilter(9))
@@ -99,63 +98,73 @@ class EducationActivity : AppCompatActivity() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun saveEducationData() {
+    private fun saveEducationDataToDatabase() {
         val program = etProgram.text.toString()
         val school = etSchool.text.toString()
         val schoolYear = etSchoolYear.text.toString()
 
-        // Create an instance of the Education data class
-        val educationEntry = Education(program = program, school = school, schoolYear = schoolYear)
+        // JSON payload
+        val params = JSONObject()
+        params.put("program", program)
+        params.put("school", school)
+        params.put("schoolYear", schoolYear)
 
-        // Add the new education entry to the list
-        educationList.add(educationEntry)
+        // Volley POST request
+        val request = JsonObjectRequest(
+            Request.Method.POST, serverUrl, params,
+            { response ->
+                Toast.makeText(this, "Education saved successfully", Toast.LENGTH_SHORT).show()
+                loadEducationDataFromDatabase() // Reload to show updated data
+            },
+            { error ->
+                Toast.makeText(this, "Failed to save education data", Toast.LENGTH_LONG).show()
+            }
+        )
 
-        // Save updated ResumeData
-        saveResumeData()
-
-        // Refresh the RecyclerView to show the new entry
-        educationAdapter.notifyDataSetChanged()
+        // Add request to queue
+        requestQueue.add(request)
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun loadEducationData() {
-        // Load current ResumeData
-        val resumeData = loadResumeData()
+    private fun loadEducationDataFromDatabase() {
+        val request = JsonArrayRequest(
+            Request.Method.GET, serverUrl, null,
+            { response ->
+                parseAndLoadEducationData(response)
+            },
+            { error ->
+                Toast.makeText(this, "Failed to load education data", Toast.LENGTH_LONG).show()
+            }
+        )
 
-        // Add existing education entries to the list
-        educationList.clear() // Clear the existing list before adding new items
-        educationList.addAll(resumeData.education)
-        educationAdapter.notifyDataSetChanged() // Refresh the RecyclerView
+        // Add request to queue
+        requestQueue.add(request)
     }
 
-    private fun loadResumeData(): ResumeData {
-        val sharedPreferences = getSharedPreferences("ResumeData", Context.MODE_PRIVATE)
-        val gson = Gson()
-        val json = sharedPreferences.getString("resumeData", null)
-        return if (json != null) {
-            gson.fromJson(json, ResumeData::class.java)
-        } else {
-            ResumeData()  // Provide default data if nothing is found
+    private fun parseAndLoadEducationData(response: JSONArray) {
+        educationList.clear()
+        for (i in 0 until response.length()) {
+            val educationJson = response.getJSONObject(i)
+            val education = Education(
+                program = educationJson.getString("program"),
+                school = educationJson.getString("school"),
+                schoolYear = educationJson.getString("schoolYear")
+            )
+            educationList.add(education)
         }
-    }
-
-    private fun saveResumeData() {
-        val sharedPreferences = getSharedPreferences("ResumeData", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        val gson = Gson()
-        val resumeData = loadResumeData() // Load current ResumeData
-
-        // Update the ResumeData with the current educationList
-        resumeData.education = educationList
-
-        // Save updated ResumeData
-        editor.putString("resumeData", gson.toJson(resumeData))
-        editor.apply()
+        educationAdapter.notifyDataSetChanged()
     }
 
     private fun clearFields() {
         etProgram.text.clear()
         etSchool.text.clear()
         etSchoolYear.text.clear()
+    }
+
+    private fun navigateTo(nextPage: Class<*>) {
+        val intent = Intent(this, nextPage)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
     }
 }

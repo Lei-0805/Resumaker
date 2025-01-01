@@ -12,7 +12,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.Request
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
+import org.json.JSONObject
 
 class ExperienceActivity : AppCompatActivity() {
 
@@ -26,6 +30,7 @@ class ExperienceActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var experienceAdapter: ExperienceAdapter
     private var experienceList: MutableList<Experience> = mutableListOf()
+    private val submitUrl = "http://192.168.13.6:8000/api/experience_data" // Replace with your actual URL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,13 +61,43 @@ class ExperienceActivity : AppCompatActivity() {
         btnSaveExp.setOnClickListener {
             if (areFieldsValid()) {
                 saveExperienceData()
-                Toast.makeText(this, "Experience details saved", Toast.LENGTH_SHORT).show()
+                submitExperienceToDatabase() // Send experience to backend
+                Toast.makeText(this, "Experience saved successfully", Toast.LENGTH_SHORT).show()
                 clearFields()
             }
         }
-        ibtnBackExperience.setOnClickListener{
+        ibtnBackExperience.setOnClickListener {
             navigateTo(createpage::class.java)
         }
+    }
+
+    private fun submitExperienceToDatabase() {
+        val company = etCompanyExp.text.toString()
+        val job = etJobExp.text.toString()
+        val startdate = etSdate.text.toString()
+        val enddate = etEdate.text.toString()
+        val details = etDetailsExp.text.toString()
+
+        val requestQueue = Volley.newRequestQueue(this)
+        val experienceObject = JSONObject().apply {
+            put("company", company)
+            put("job", job)
+            put("start_date", startdate)
+            put("end_date", enddate)
+            put("details", details)
+        }
+
+        val jsonObjectRequest = JsonObjectRequest(
+            Request.Method.POST, submitUrl, experienceObject,
+            { response ->
+                Toast.makeText(this, "Experience saved successfully", Toast.LENGTH_SHORT).show()
+            },
+            { error ->
+                Toast.makeText(this, "Failed to save experience data", Toast.LENGTH_SHORT).show()
+            }
+        )
+
+        requestQueue.add(jsonObjectRequest)
     }
 
     // Function to navigate to the next page
@@ -74,11 +109,9 @@ class ExperienceActivity : AppCompatActivity() {
     }
 
     private fun setValidationFilters() {
-        // Prevent numbers in etDetailsExp, etCompanyExp, and etJobTitle
         val noNumbersFilter = InputFilter { source, _, _, _, _, _ ->
             if (source.matches(Regex("[0-9]"))) "" else null
         }
-        //Set the filter that do not allow numbers and exceeding input in sdate & edate
         etDetailsExp.filters = arrayOf(noNumbersFilter)
         etCompanyExp.filters = arrayOf(noNumbersFilter)
         etJobExp.filters = arrayOf(noNumbersFilter)
@@ -114,24 +147,19 @@ class ExperienceActivity : AppCompatActivity() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun saveExperienceData() {
-        val company = etCompanyExp.text.toString()
-        val job = etJobExp.text.toString()
-        val details = etDetailsExp.text.toString()
-        val startdate = etSdate.text.toString()
-        val enddate = etEdate.text.toString()
-
-        // Create an instance of the Experience data class
-        val experienceEntry = Experience(company, job, startdate, enddate, details)
-
-        // Add to the local list and notify adapter
+        val experienceEntry = Experience(
+            etCompanyExp.text.toString(),
+            etJobExp.text.toString(),
+            etSdate.text.toString(),
+            etEdate.text.toString(),
+            etDetailsExp.text.toString()
+        )
         experienceList.add(experienceEntry)
         experienceAdapter.notifyDataSetChanged()
 
-        // Load current ResumeData
         val resumeData = loadResumeData()
         resumeData.experience = experienceList
 
-        // Save updated ResumeData
         val sharedPreferences = getSharedPreferences("ResumeData", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         val gson = Gson()
@@ -154,7 +182,7 @@ class ExperienceActivity : AppCompatActivity() {
         return if (json != null) {
             gson.fromJson(json, ResumeData::class.java)
         } else {
-            ResumeData()  // Provide default data if nothing is found
+            ResumeData()
         }
     }
 

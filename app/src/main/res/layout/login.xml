@@ -41,16 +41,6 @@
             android:textColor="@color/white"
             android:textSize="50sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/poppins_medium"
-            android:text="Username"
-            android:textColor="@color/white"
-            android:textSize="15sp" />
-
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutUsername"
             android:layout_width="match_parent"
@@ -70,19 +60,11 @@
                 android:textColor="@color/white" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/poppins_medium"
-            android:text="Password"
-            android:textColor="@color/white"
-            android:textSize="15sp" />
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
             app:passwordToggleEnabled="true"
             app:boxStrokeColor="@color/white"
             android:textColorHint="@color/white"

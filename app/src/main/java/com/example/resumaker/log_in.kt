@@ -43,7 +43,7 @@ class log_in : AppCompatActivity() {
 
     private fun login(username: String, create_password: String) {
         val queue = Volley.newRequestQueue(this)
-        val url = "http://192.168.127.6:8000/api/login_users"
+        val url = "http://192.168.13.6:8000/api/login_users"
 
         val request = object : StringRequest(
             Method.POST, url,
@@ -61,11 +61,11 @@ class log_in : AppCompatActivity() {
                         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                         navigateTo(navfunction::class.java)
                     } else {
-                        Toast.makeText(this, "Login failed: $message", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show()
                     }
                 } catch (e: Exception) {
-                    Toast.makeText(this, "Error parsing response: $response", Toast.LENGTH_LONG).show()
-                    println("Error parsing response: ${e.message}")
+                    Toast.makeText(this, "Error parsing response", Toast.LENGTH_LONG).show()
+                    println("Error parsing response,please try again")
                 }
             },
             { error ->
@@ -75,8 +75,8 @@ class log_in : AppCompatActivity() {
                     Toast.makeText(this, "Error: $statusCode - $errorData", Toast.LENGTH_LONG).show()
                     println("Error: $statusCode - $errorData")
                 } else {
-                    Toast.makeText(this, "Network error: ${error.message}", Toast.LENGTH_LONG).show()
-                    println("Network error: ${error.message}")
+                    Toast.makeText(this, "Network error", Toast.LENGTH_LONG).show()
+                    println("Network error, please check your internet connection")
                 }
             }) {
             override fun getParams(): MutableMap<String, String> {

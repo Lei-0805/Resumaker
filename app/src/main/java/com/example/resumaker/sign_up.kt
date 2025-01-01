@@ -51,7 +51,7 @@ class sign_up : AppCompatActivity() {
 
     private fun signup(username: String, create_password: String, confirm_password: String) {
         val queue = Volley.newRequestQueue(this)
-        val url = "http://192.168.127.6:8000/api/signup_users"
+        val url = "http://192.168.13.6:8000/api/signup_users"
 
         val request = object : StringRequest(
             Method.POST, url,
@@ -67,19 +67,19 @@ class sign_up : AppCompatActivity() {
                         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                         navigateTo(navfunction::class.java)
                     } else {
-                        Toast.makeText(this, "Signup failed: $message", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Signup failed", Toast.LENGTH_SHORT).show()
                     }
                 } catch (e: Exception) {
-                    Toast.makeText(this, "Error parsing response: ${response}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Error parsing response, please try again", Toast.LENGTH_LONG).show()
                 }
             },
             { error ->
                 if (error.networkResponse != null) {
                     val statusCode = error.networkResponse.statusCode
                     val errorData = error.networkResponse.data?.let { String(it) }
-                    Toast.makeText(this, "Error: $statusCode - $errorData", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Service error", Toast.LENGTH_LONG).show()
                 } else {
-                    Toast.makeText(this, "Network error: ${error.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Network error, please check your internet connection", Toast.LENGTH_LONG).show()
                 }
             }) {
             override fun getParams(): MutableMap<String, String> {
